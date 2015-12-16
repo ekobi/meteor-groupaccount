@@ -1,0 +1,30 @@
+Package.describe({
+    name: 'verody:groupaccount',
+    version: '0.0.1',
+    summary: 'Account management package providing qualified access to a single Meteor server account from one or more sets of credentials.',
+    git: '',
+    documentation: 'README.md'
+});
+
+Package.onUse(function(api) {
+    api.use('npm-bcrypt@=0.7.8_2');
+    api.use([
+        'accounts-base',
+        'ecmascript',
+        'sha',
+        'ejson',
+        'ddp',
+        'check'
+    ], ['client', 'server']);
+
+    api.versionsFrom('1.2.1');
+    api.imply ('accounts-base');
+    api.addFiles(['groupaccount.js']);
+    api.export('GroupAccounts');
+});
+
+Package.onTest(function(api) {
+    api.use(['tinytest', 'random']);
+    api.use(['accounts-base', 'verody:groupaccount', 'sha']);
+    api.addFiles('groupaccount-tests.js');
+});
