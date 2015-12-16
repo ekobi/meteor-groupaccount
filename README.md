@@ -4,6 +4,7 @@ Use `groupaccount` to provide qualified access to a single Meteor account from o
 - **`accountSelector`** : a globally-unique identifier for the account. Associated with a single `Meteor.user`
 - **`memberSelector`** : locally-unique identifier for someone allowed to read/write some or all data associated with the group
 - **`accountAdmin`** : special, non-optional account member allowed to read/write all data associated with the group
+
 ##Usage
 
 Add the package thus:
@@ -15,19 +16,27 @@ meteor add verody:groupaccount
 Then, skillfully manipulate the following methods to achieve your ends:
 
 ```
-GroupAccounts.createAccount(params, callback) // params include: accountSelector, accountAdminEmail, accountAdminPassword
+//
+// params include: accountSelector, accountAdminEmail, accountAdminPassword
+GroupAccounts.createAccount(params, callback);
 ```
 
 ```
-GroupAccounts.addMember(params, callback) // params include: memberSelector, memberPassword. Must be logged in to do this.
+//
+// params include: memberSelector, memberPassword. Must be logged in to do this.
+GroupAccounts.addMember(params, callback)
 ```
 
 ```
-GroupAccounts.removeMember(params, callback) // params include: memberSelector. Must be logged in to do this.
+//
+ // params include: memberSelector. Must be logged in to do this.
+GroupAccounts.removeMember(params, callback);
 ```
 
 ```
-Meteor.loginWithGroupAccount(params, callback) // params include: accountSelector, memberSelector, memberPassword
+//
+// params include: accountSelector, memberSelector, memberPassword
+Meteor.loginWithGroupAccount(params, callback);
 ```
 
 ##Examples
