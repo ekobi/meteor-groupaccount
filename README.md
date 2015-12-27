@@ -17,31 +17,38 @@ Then, skillfully manipulate the following methods to achieve your ends:
 
 ```
 //
-// params include: accountSelector, accountAdminEmail, accountAdminPassword
+// params include: accountSelector, accountAdminEmail, accountAdminPassword. Returns the user document from Accounts.insertUserDoc(), or throws an error.
 GroupAccounts.createAccount(params, callback);
 ```
 
 ```
 //
-// params include: memberSelector, memberPassword. Must be logged in to do this.
-GroupAccounts.addMember(params, callback)
+// params include: accountSelector, memberSelector. Group membership
+// must be subsequently approved. Returns the Meteor.users document ID for this group account, or throws an error.
+GroupAccounts.joinGroup(params, callback);
 ```
 
 ```
 //
- // params include: memberSelector. Must be logged in to do this.
+// params include: memberSelector. Must be logged in to do this. Returns the Meteor.users document ID for this group account, or throws an error.
+GroupAccounts.activateMember(params, callback);
+```
+
+```
+//
+ // params include: memberSelector. Must be logged in to do this. Returns the Meteor.users document ID for this group account, or throws an error.
 GroupAccounts.removeMember(params, callback);
 ```
 
 ```
 //
-// params include: accountSelector, memberSelector, memberPassword
+// params include: accountSelector, memberSelector, memberPassword. Throws an error on early failure. Otherwise, returns an object with userId set to Meteor.users document ID for this group account, and perhaps error set to a Meteor.Error. 
 Meteor.loginWithGroupAccount(params, callback);
 ```
 
 ##Examples
 
-Callback functions for the `GroupAccounts.*` methods all have the same signature and semantics:
+Callback functions for the `GroupAccounts.*` methods all have the same signature and return semantics:
 
 ```
         var params = {
@@ -76,4 +83,4 @@ The callback for Meteor.loginWithGroupAccount follows the convention for the Met
 
 ##Pipeline
 - **member roles** to facilitate access control to portions of the `Meteor.user()` data.
-- **token-based invitation/authorization** to control group membership
+- **limits on pending membership** to control group membership

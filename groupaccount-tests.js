@@ -5,26 +5,28 @@ if (Meteor.isClient) {
 
         return {
             uniqueAccount : function () {
-                console.log ('[uniqueAccount]',unique);
                 return 'testAccount-'+unique;
+            },
+
+            uniqueUser : function (suffix) {
+                suffix = suffix || '';
+                return 'testUser-'+suffix+unique;
             },
 
             uniqueEmail: function () {
                 console.log ('[uniqueEmail]',unique);
-                return 'groupaccount-test-'+unique+'@e-kobi.com';
+                return 'groupaccount-test-'+unique+'@example.com';
             },
 
-            updateUnique: function (replacement) {
+            init: function (replacement) {
                 var before = unique;
                 unique = replacement || Random.id();
-                console.log ('[updateUnique] '+ before +' --> '+ unique);
             }
         }
     })();
 
-
     Tinytest.addAsync ('groupaccount - test init', function (test, onComplete) {
-        GroupAccounts.Tester.updateUnique();
+        GroupAccounts.Tester.init();
         Meteor.logout ( function (err) {
             test.isFalse(err,err);
             onComplete();
@@ -56,68 +58,37 @@ if (Meteor.isClient) {
         });
     });
 
-    //
-    // test login with named account, member present/not present; correct/incorrect password
-    Tinytest.addAsync ('groupaccount - test passwordLogin admin', function (test, onComplete) {
+    Tinytest.addAsync ('groupaccount - test joinGroup', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: 'admin',
-            memberPassword: 'thisIsASeriousPassword'
+            memberSelector: GroupAccounts.Tester.uniqueUser('1'),
+            memberPassword: 'anotherCrazyPassword'
         };
-
-        Meteor.loginWithGroupAccount (params, function (err) {
+        GroupAccounts.joinGroup( params, function (err,res) {
             test.isFalse(err,err);
             onComplete();
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test bad password login attempt', function (test, onComplete) {
+    Tinytest.addAsync ('groupaccount - test duplicate joinGroup ', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: 'admin',
-            memberPassword: 'thisIsASeriousPassword,right?'
-        };
-
-        Meteor.loginWithGroupAccount (params, function (err) {
-            test.isTrue(err,err);
-            onComplete();
-        });
-    });
-
-    Tinytest.addAsync ('groupaccount - test remove non-existent Member ', function (test, onComplete) {
-        var params = {
-            memberSelector: 'testMember1'
-        };
-        GroupAccounts.removeMember( params, function (err,res) {
-            test.isTrue(err,'Help -- should not be able to remove non-existent member!');
-            onComplete();
-        });
-    });
-
-    Tinytest.addAsync ('groupaccount - test addMember', function (test, onComplete) {
-        var params = {
-            memberSelector: 'testMember1',
+            memberSelector: GroupAccounts.Tester.uniqueUser('1'),
             memberPassword: 'anotherCrazyPassword'
         };
-        GroupAccounts.addMember( params, function (err,res) {
-            test.isFalse(err,err);
-            onComplete();
-        });
-    });
-
-    Tinytest.addAsync ('groupaccount - test add duplicate member', function (test, onComplete) {
-        var params = {
-            memberSelector: 'testMember1',
-            memberPassword: 'anotherCrazyPassword'
-        };
-        GroupAccounts.addMember( params, function (err,res) {
+        GroupAccounts.joinGroup( params, function (err,res) {
             test.isTrue(err,'Help -- should not be able to add duplicate member!');
             onComplete();
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test logout', function (test, onComplete) {
-        Meteor.logout ( function (err) {
+    Tinytest.addAsync ('groupaccount - test additional joinGroup ', function (test, onComplete) {
+        var params = {
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: GroupAccounts.Tester.uniqueUser('2'),
+            memberPassword: 'anotherCrazyPassword'
+        };
+        GroupAccounts.joinGroup( params, function (err,res) {
             test.isFalse(err,err);
             onComplete();
         });
@@ -136,22 +107,37 @@ if (Meteor.isClient) {
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test addMember while logged out', function (test, onComplete) {
+    Tinytest.addAsync ('groupaccount - test passwordLogin before approval', function (test, onComplete) {
         var params = {
-            memberSelector: 'testMember2',
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: GroupAccounts.Tester.uniqueUser('1'),
             memberPassword: 'anotherCrazyPassword'
         };
-        GroupAccounts.addMember( params, function (err,res) {
-            test.isTrue(err,'Help -- should not be able to add member while logged out!');
+
+        Meteor.loginWithGroupAccount (params, function (err) {
+            test.isTrue(err,err);
             onComplete();
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test passwordLogin good member', function (test, onComplete) {
+    Tinytest.addAsync ('groupaccount - test bad password login attempt', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: 'testMember1',
-            memberPassword: 'anotherCrazyPassword'
+            memberSelector: 'admin',
+            memberPassword: 'thisIsASeriousPassword,right?'
+        };
+
+        Meteor.loginWithGroupAccount (params, function (err) {
+            test.isTrue(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test passwordLogin admin', function (test, onComplete) {
+        var params = {
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: 'admin',
+            memberPassword: 'thisIsASeriousPassword'
         };
 
         Meteor.loginWithGroupAccount (params, function (err) {
@@ -160,13 +146,63 @@ if (Meteor.isClient) {
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test removeMember', function (test, onComplete) {
-            //
-            // test named member present; named member not present; named account not present.
+    Tinytest.addAsync ('groupaccount - test remove non-existent Member ', function (test, onComplete) {
         var params = {
-            memberSelector: 'testMember1'
+            memberSelector: 'badMember'
         };
         GroupAccounts.removeMember( params, function (err,res) {
+            test.isTrue(err,'Help -- should not be able to remove non-existent member!');
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test removeMember', function (test, onComplete) {
+        var params = {
+            memberSelector: GroupAccounts.Tester.uniqueUser('2')
+        };
+        GroupAccounts.removeMember( params, function (err,res) {
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test non-existent member approval', function (test, onComplete) {
+        var params = {
+            memberSelector: 'badMember',
+        };
+
+        GroupAccounts.activateMember (params, function (err,res){
+            test.isTrue(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test member approval', function (test, onComplete) {
+        var params = {
+            memberSelector: GroupAccounts.Tester.uniqueUser('1'),
+        };
+
+        GroupAccounts.activateMember (params, function (err,res){
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test logout', function (test, onComplete) {
+        Meteor.logout ( function (err) {
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test passwordLogin good member', function (test, onComplete) {
+        var params = {
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: GroupAccounts.Tester.uniqueUser('1'),
+            memberPassword: 'anotherCrazyPassword'
+        };
+
+        Meteor.loginWithGroupAccount (params, function (err) {
             test.isFalse(err,err);
             onComplete();
         });

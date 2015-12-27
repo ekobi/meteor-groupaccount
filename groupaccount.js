@@ -26,15 +26,17 @@ if (Meteor.isClient) {
         Meteor.call ('groupaccount/createAccount', params, callback);
     };
 
-    GroupAccounts.addMember = function (params, callback) {
-        //console.log ('[GroupAccounts.addMember]', params);
+    GroupAccounts.joinGroup = function (params, callback) {
+        //console.log ('[GroupAccounts.joinGroup]', params);
         if (callback) { check (callback, Function); }
         check (params, Match.ObjectIncluding ({
-            memberPassword: String }));
+            accountSelector: String,
+            memberPassword: String 
+	    }));
         params.memberPassword = {
             digest: SHA256 (params.memberPassword),
             algorithm: 'sha-256' };
-        Meteor.call ('groupaccount/addMember', params, callback);
+        Meteor.call ('groupaccount/joinGroup', params, callback);
     };
 
     GroupAccounts.removeMember = function (params, callback) {
@@ -43,6 +45,13 @@ if (Meteor.isClient) {
         check (params, Match.ObjectIncluding ({
             memberSelector: String }));
         Meteor.call ('groupaccount/removeMember', params, callback);
+    };
+
+    GroupAccounts.activateMember = function (params, callback) {
+        if (callback) { check (callback, Function); }
+        check (params, Match.ObjectIncluding ({
+            memberSelector: String}));
+        Meteor.call ('groupaccount/activateMember', params, callback);
     };
 
     Meteor.loginWithGroupAccount = function (params, callback) {
@@ -98,7 +107,11 @@ if (Meteor.isServer) {
                 "No member '"+params.memberSelector+"' in group '"+params.accountSelector+"'");
         }
 
+
         var result = { userId: group._id };
+	    if (groupMember.pendingActivation) {
+	        result.error = new Meteor.Error ("Group membership pending authorization.");
+	    }
         if (!bcryptCompare ( params.memberPassword.digest, groupMember.bcrypt)) {
             result.error = new Meteor.Error ("Invalid Password");
         }
@@ -134,7 +147,7 @@ if (Meteor.isServer) {
                     }
                 }
             });
-        
+            
             //console.log ('[groupaccount/createAccount] result:', user);
             return user;
         },
@@ -155,24 +168,21 @@ if (Meteor.isServer) {
             return {};
         },
 
-        'groupaccount/addMember': function (params) {
-            //console.log ('[groupaccount/addMember]', params);
+        'groupaccount/joinGroup': function (params) {
+            //console.log ('[groupaccount/joinGroup]', params);
             check (params, Match.ObjectIncluding({
+		        accountSelector:String,
                 memberSelector:String,
                 memberPassword:ValidDigestPassword
             }));
 
-            if (!this.userId) {
-                throw new Meteor.Error (
-                    'Not logged in', 'Must be logged in to add group members.');
-            }
-            
-            var group = Meteor.users.findOne (this.userId);
+            var group = Meteor.users.findOne ({username: params.accountSelector});
             if (!group || !group.services ||!group.services.groupaccount) {
-                throw new Meteor.Error(
-                    "Invalid Group Account", "Not logged into a group account.");
+		        throw new Meteor.Error(
+                    "Invalid Group Account",
+                    "Group Account not found for '" + params.accountSelector +"'");
             }
-            //console.log ('[groupaccount/addMember] members:', group.services.groupaccount);
+            //console.log ('[groupaccount/joinGroup] members:', group.services.groupaccount);
 
             if (group.services.groupaccount.members[params.memberSelector]) {
                 throw new Meteor.Error (
@@ -181,12 +191,48 @@ if (Meteor.isServer) {
             }
 
             var query = {};
-            query['services.groupaccount.members.'+params.memberSelector] =
-                 {bcrypt: bcryptHash (params.memberPassword.digest,10)};
+            query['services.groupaccount.members.'+params.memberSelector] = {
+		        bcrypt: bcryptHash (params.memberPassword.digest,10),
+		        pendingActivation: true
+	        };
             var status = Meteor.users.update ( group._id, { $set: query } );
             if (status<1) {
                 throw new Meteor.Error (
                     "Update Failed", "Unable to add member '"+params.memberSelector+"'."
+                );
+            }
+            return group._id;
+        },
+        'groupaccount/activateMember': function (params) {
+            //console.log ('[groupaccount/activateMember]', params);
+            check (params, Match.ObjectIncluding({
+                memberSelector:String
+            }));
+
+            if (!this.userId) {
+                throw new Meteor.Error (
+                    'Not logged in', 'Must be logged in to activate group members.');
+            }
+            
+            var group = Meteor.users.findOne (this.userId);
+            if (!group || !group.services ||!group.services.groupaccount) {
+                throw new Meteor.Error(
+                    "Invalid Group Account", "Not logged into a group account.");
+            }
+
+            if (!group.services.groupaccount.members[params.memberSelector]) {
+                throw new Meteor.Error (
+                    "No such member",
+                    "Member '"+params.memberSelector+"' does not exist in this group '");
+            }
+
+            var query = {};
+            query['services.groupaccount.members.'+params.memberSelector+'.pendingActivation'] = false;
+            //console.log ('[groupaccount/activateMember] query:', query);
+            var status = Meteor.users.update ( group._id, { $set: query } );
+            if (status<1) {
+                throw new Meteor.Error (
+                    "Update Failed", "Unable to activate member '"+params.memberSelector+"'."
                 );
             }
             return group._id;
