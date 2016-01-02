@@ -230,6 +230,12 @@ if (Meteor.isServer) {
                 );
             }
 
+            if (group.services.groupaccount.members[params.memberSelector]) {
+                throw new Meteor.Error (
+                    "Duplicate member:"+params.memberSelector
+                );
+            }
+
             var query = {};
             query['services.groupaccount.members.'+params.memberSelector] = {
 		        bcrypt: bcryptHash (params.memberPassword.digest,10),
