@@ -90,4 +90,3 @@ The callback for Meteor.loginWithGroupAccount follows the convention for the Met
 
 ##Pipeline
 - **member roles** to facilitate access control to portions of the `Meteor.user()` data.
-- **limits on pending membership** to control group membership
