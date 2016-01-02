@@ -14,7 +14,8 @@ Package.onUse(function(api) {
         'sha',
         'ejson',
         'ddp',
-        'check'
+        'check',
+        'underscore'
     ], ['client', 'server']);
 
     api.versionsFrom('1.2.1');

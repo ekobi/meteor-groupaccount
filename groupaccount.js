@@ -26,6 +26,10 @@ if (Meteor.isClient) {
         Meteor.call ('groupaccount/createAccount', params, callback);
     };
 
+    GroupAccounts.configure = function ( params, callback) {
+        Meteor.call ('groupaccount/configure', params, callback);
+    };
+
     GroupAccounts.joinGroup = function (params, callback) {
         //console.log ('[GroupAccounts.joinGroup]', params);
         if (callback) { check (callback, Function); }
@@ -139,6 +143,7 @@ if (Meteor.isServer) {
                 emails: [{address: params.accountAdminEmail, verified: false}],
                 services: {
                     groupaccount : {
+                        config : { pendingLimit: 1 },
                         members: {
                             admin: {
                                 bcrypt: bcryptHash(params.accountAdminPassword.digest,10)
@@ -152,6 +157,36 @@ if (Meteor.isServer) {
             return user;
         },
 
+        'groupaccount/configure': function (params){
+            try {
+                check (params, { pendingLimit: Match.Optional(Number) });
+            } catch (e) {
+                //console.log ('[groupaccount/configure]', e);
+                throw new Meteor.Error ( "Invalid configuration parameter: "+e.path);
+            }
+            if (!this.userId) {
+                throw new Meteor.Error (
+                    'Not logged in', 'Must be logged in to activate group members.');
+            }
+            
+            var group = Meteor.users.findOne (this.userId);
+            if (!group || !group.services ||!group.services.groupaccount) {
+                throw new Meteor.Error(
+                    "Invalid Group Account", "Not logged into a group account.");
+            }
+
+            var ret = _.extend( group.services.groupaccount.config, params);
+            var query = {};
+            query['services.groupaccount.config'] = ret;
+            //console.log ('[groupaccount/configure] query:', query);
+            var status = Meteor.users.update ( group._id, { $set: query } );
+            if (status<1) {
+                throw new Meteor.Error (
+                    "Update Failed", "Unable to configure"
+                );
+            }
+            return ret;
+        },
         'groupaccount/removeAccount': function (params){
             //console.log ('[groupaccount/removeAccount]', params);
             check (params, Match.ObjectIncluding({
@@ -182,12 +217,17 @@ if (Meteor.isServer) {
                     "Invalid Group Account",
                     "Group Account not found for '" + params.accountSelector +"'");
             }
-            //console.log ('[groupaccount/joinGroup] members:', group.services.groupaccount);
+            //console.log ('[groupaccount/joinGroup] services.groupaccount:', group.services.groupaccount);
 
-            if (group.services.groupaccount.members[params.memberSelector]) {
+            var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
+                return memo + member.pendingActivation?1:0;
+            }, 0);
+
+            if (pendingCount >= group.services.groupaccount.config.pendingLimit) {
                 throw new Meteor.Error (
-                    "Duplicate Member",
-                    "Member '"+params.memberSelector+"' already exists in this group '");
+                    "Too many applications pending.",
+                    "Group not considering new members."
+                );
             }
 
             var query = {};
@@ -203,6 +243,7 @@ if (Meteor.isServer) {
             }
             return group._id;
         },
+
         'groupaccount/activateMember': function (params) {
             //console.log ('[groupaccount/activateMember]', params);
             check (params, Match.ObjectIncluding({

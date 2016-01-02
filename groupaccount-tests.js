@@ -82,18 +82,6 @@ if (Meteor.isClient) {
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test additional joinGroup ', function (test, onComplete) {
-        var params = {
-            accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: GroupAccounts.Tester.uniqueUser('2'),
-            memberPassword: 'anotherCrazyPassword'
-        };
-        GroupAccounts.joinGroup( params, function (err,res) {
-            test.isFalse(err,err);
-            onComplete();
-        });
-    });
-
     Tinytest.addAsync ('groupaccount - test passwordLogin bad member', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
@@ -156,16 +144,6 @@ if (Meteor.isClient) {
         });
     });
 
-    Tinytest.addAsync ('groupaccount - test removeMember', function (test, onComplete) {
-        var params = {
-            memberSelector: GroupAccounts.Tester.uniqueUser('2')
-        };
-        GroupAccounts.removeMember( params, function (err,res) {
-            test.isFalse(err,err);
-            onComplete();
-        });
-    });
-
     Tinytest.addAsync ('groupaccount - test non-existent member approval', function (test, onComplete) {
         var params = {
             memberSelector: 'badMember',
@@ -188,12 +166,57 @@ if (Meteor.isClient) {
         });
     });
 
+    Tinytest.addAsync ('groupaccount - test additional joinGroup ', function (test, onComplete) {
+        var params = {
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: GroupAccounts.Tester.uniqueUser('2'),
+            memberPassword: 'anotherCrazyPassword'
+        };
+        GroupAccounts.joinGroup( params, function (err,res) {
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test excess joinGroup ', function (test, onComplete) {
+        var params = {
+            accountSelector: GroupAccounts.Tester.uniqueAccount(),
+            memberSelector: GroupAccounts.Tester.uniqueUser('2'),
+            memberPassword: 'anotherCrazyPassword'
+        };
+        GroupAccounts.joinGroup( params, function (err,res) {
+            test.isTrue(err,'Help -- should have tripped quota limit!');
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test bad config attempt ', function (test, onComplete) {
+        var params = {
+            pendingLimit : 3, badConfig: false
+        };
+        GroupAccounts.configure( params, function (err,res) {
+            test.isTrue(err, 'Help -- should barf on invalid configuration parameter');
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test increase quota ', function (test, onComplete) {
+        var params = {
+            pendingLimit : 2
+        };
+        GroupAccounts.configure( params, function (err,res) {
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
     Tinytest.addAsync ('groupaccount - test logout', function (test, onComplete) {
         Meteor.logout ( function (err) {
             test.isFalse(err,err);
             onComplete();
         });
     });
+
 
     Tinytest.addAsync ('groupaccount - test passwordLogin good member', function (test, onComplete) {
         var params = {
@@ -203,6 +226,16 @@ if (Meteor.isClient) {
         };
 
         Meteor.loginWithGroupAccount (params, function (err) {
+            test.isFalse(err,err);
+            onComplete();
+        });
+    });
+
+    Tinytest.addAsync ('groupaccount - test removeMember', function (test, onComplete) {
+        var params = {
+            memberSelector: GroupAccounts.Tester.uniqueUser('2')
+        };
+        GroupAccounts.removeMember( params, function (err,res) {
             test.isFalse(err,err);
             onComplete();
         });
@@ -228,6 +261,4 @@ if (Meteor.isClient) {
             onComplete();
         });
     });
-
-
 }

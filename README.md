@@ -36,7 +36,13 @@ GroupAccounts.activateMember(params, callback);
 
 ```
 //
- // params include: memberSelector. Must be logged in to do this. Returns the Meteor.users document ID for this group account, or throws an error.
+// Configure options for this group account. Optional params include: pendingLimit; Must be logged in to do this. Returns the current (possibly updated) configuration parameters, or throws an error.
+GroupAccounts.configure(params, callback);
+```
+
+```
+//
+// params include: memberSelector. Must be logged in to do this. Returns the Meteor.users document ID for this group account, or throws an error.
 GroupAccounts.removeMember(params, callback);
 ```
 
@@ -45,6 +51,7 @@ GroupAccounts.removeMember(params, callback);
 // params include: accountSelector, memberSelector, memberPassword. Throws an error on early failure. Otherwise, returns an object with userId set to Meteor.users document ID for this group account, and perhaps error set to a Meteor.Error. 
 Meteor.loginWithGroupAccount(params, callback);
 ```
+
 
 ##Examples
 
