@@ -7,7 +7,7 @@ Use `groupaccount` to provide qualified access to a single Meteor account from o
 - **`memberSelector`** : locally-unique identifier for someone allowed to read/write some or all data associated with the group
 - **`accountAdmin`** : special, non-optional account member allowed to read/write all data associated with the group
 
-##Usage
+## Usage
 
 Add the package thus:
 
@@ -55,7 +55,7 @@ Meteor.loginWithGroupAccount(params, callback);
 ```
 
 
-##Examples
+## Examples
 
 Callback functions for the `GroupAccounts.*` methods all have the same signature and return semantics:
 
@@ -90,5 +90,5 @@ The callback for Meteor.loginWithGroupAccount follows the convention for the Met
 
 ```
 
-##Pipeline
+## Pipeline
 - **member roles** to facilitate access control to portions of the `Meteor.user()` data.
