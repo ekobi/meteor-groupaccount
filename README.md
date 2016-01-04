@@ -1,5 +1,7 @@
 # groupaccount [![Build Status](https://travis-ci.org/ekobi/meteor-groupaccount.svg?branch=master)](https://travis-ci.org/ekobi/meteor-groupaccount)
-Use `groupaccount` to provide qualified access to a single Meteor account from one or more sets of credentials. Some helpful definitions:
+Use `groupaccount` to provide qualified access to a single Meteor account from one or more sets of credentials.
+
+## Some helpful definitions
 
 - **`accountSelector`** : a globally-unique identifier for the account. Associated with a single `Meteor.user`
 - **`memberSelector`** : locally-unique identifier for someone allowed to read/write some or all data associated with the group
