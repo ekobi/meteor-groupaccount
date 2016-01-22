@@ -308,7 +308,7 @@ if (Meteor.isServer) {
             }
 
             var query = {};
-            query['services.groupaccount.members'+params.memberSelector] = {};
+            query['services.groupaccount.members.'+params.memberSelector] = {};
             var status = Meteor.users.update ( group._id, { $unset: query } );
             //console.log ('[groupaccount/removeMember] status:', status);
             if (status<1) {
