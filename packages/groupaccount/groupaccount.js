@@ -123,6 +123,48 @@ if (Meteor.isServer) {
         return result;
     });
 
+    Meteor.publish ('groupaccount/memberInfo', function () {
+        if (!this.userId) {
+            return [ ];
+        }
+        var group = Meteor.users.findOne (this.userId);
+        if (!group || !group.services ||!group.services.groupaccount) {
+            return [ ];
+        }
+        var _self = this;
+        function infoRecord (services) {
+            if (!services) {
+                return {};
+            }
+            var ret = { pendingLimit: services.groupaccount.config.pendingLimit };
+            ret.members = _.object (
+                _.map (services.groupaccount.members, function (val, key) {
+                    return [ key, _.omit (val, ['bcrypt']) ];
+                })
+            );
+            return ret;
+        }
+        var handle = Meteor.users.find(this.userId).observeChanges({
+            added: function (id, fields) {
+                if (fields.services) {
+                    _self.added ("groupaccount/memberInfo", _self.userId, infoRecord(fields.services));
+                }
+            },
+            changed: function (id, fields) {
+                if (fields.services) {
+                    _self.changed ("groupaccount/memberInfo", _self.userId, infoRecord(fields.services));
+                }
+            }
+        });
+
+        _self.added ("groupaccount/memberInfo", _self.userId, infoRecord(group.services));
+
+        _self.ready ();
+        _self.onStop (function (){
+            handle.stop();
+        });
+    });
+
     Meteor.methods ({
         'groupaccount/createAccount': function (params){
             check (params, Match.ObjectIncluding({
@@ -317,8 +359,95 @@ if (Meteor.isServer) {
                 );
             }
             return group._id;
+        },
+        'groupaccount/members': function () {
+            if (!this.userId) {
+                throw new Meteor.Error (
+                    'Not logged in', 'Must be logged in to list group members.');
+            }
+
+            var group = Meteor.users.findOne (this.userId);
+            if (!group || !group.services ||!group.services.groupaccount) {
+                throw new Meteor.Error(
+                    "Invalid Group Account", "Not logged into a group account.");
+            }
+
+            //
+            // strip out sensitive field(s) of member dictionary
+            return _.object (
+                _.map (group.services.account.members, function (val, key) {
+                    return [ key, _.omit (val, ['bcrypt']) ];
+                })
+            );
+        },
+        'groupaccount/probe': function (params) {
+
+            try {
+                check ( params, {
+                    accountSelector: Match.Optional(String),
+                    memberSelector: Match.Optional(String),
+                });
+            } catch (e) {
+                throw new Meteor.Error (e.sanitizedError.error, e.message);
+            }
+
+            var ret = {
+                validNewGroup:false,
+                validOldGroup:false,
+                validNewMember:false,
+                validOldMember:false,
+                membershipOpen:false
+            }
+
+             if (!params.accountSelector) {
+                return ret;
+            }
+
+            var group = Meteor.users.findOne ({username: params.accountSelector});
+            if (!group) {
+                //
+                // unclaimed Meteor username.
+                ret.validNewGroup=true;
+                return ret;
+            }
+
+            if (!group.services || !group.services.groupaccount) {
+                //
+                // existing Meteor username, but not group account
+                return ret;
+            } else {
+                ret.validOldGroup=true;
+            }
+
+            var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
+                return memo + member.pendingActivation?1:0;
+            }, 0);
+
+            if (pendingCount < group.services.groupaccount.config.pendingLimit) {
+                ret.membershipOpen=true;
+            }
+
+            if (group.services.groupaccount.members[params.memberSelector]) {
+                ret.validOldMember=true;
+                return ret;
+            }
+
+            if (params.memberSelector) {
+                //
+                // I guess any non-zero-length member name is okay?
+                ret.validNewMember=true;
+            }
+            return ret;
         }
+
     });
+
+    DDPRateLimiter.addRule ({
+        type:'method',
+        name:'groupaccount/probe',
+        connectionId : function () { return true; }
+    },10,1000);
+
 }
 
 

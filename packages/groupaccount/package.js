@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount',
-    version: '0.1.1',
+    version: '0.2.0',
     summary: 'Provides qualified access to a single Meteor user account from one or more sets of credentials.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'
@@ -15,7 +15,8 @@ Package.onUse(function(api) {
         'ejson',
         'ddp',
         'check',
-        'underscore'
+        'underscore',
+        'ddp-rate-limiter',
     ], ['client', 'server']);
 
     api.versionsFrom('1.2.1');
