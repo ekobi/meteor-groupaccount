@@ -1,0 +1,36 @@
+<template name="groupSignIn">
+  info: {{_gsiFormInfo "infoText"}}
+  <form>
+    <div>
+      <input type="text" class="form-control gsi-groupnameinput" placeholder="groupname">
+    </div>
+    {{#if _gsiFormInfo "memberInputActive"}}
+      <div class="form-group">
+        <input type="text" class="form-control gsi-membernameinput" placeholder="memberName">
+      </div>
+    {{/if}}
+    {{#if _gsiFormInfo "emailInputActive"}}
+      <div>
+        <input type="text"  class="form-control gsi-emailinput" placeholder="email">
+      </div>
+    {{/if}}
+    {{#if _gsiFormInfo "passwordInputActive"}}
+    <div>
+      <input type="password" class="form-control gsi-passwordinput" placeholder="password">
+    </div>
+    {{/if}}
+    {{#if _gsiFormInfo "passwordVerifyInputActive"}}
+    <div>
+      <input type="password" class="form-control gsi-passwordverifyinput" placeholder="verify password">
+    </div>
+    {{/if}}
+    {{#if _gsiFormInfo "submitButtonActive"}}
+    <div>
+      <Button type="submit" data-action='{{_gsiFormInfo "submitAction"}}' class="gsi-submitbutton btn btn-default">
+        {{_gsiFormInfo "submitButtonText"}}
+      </button>
+    </div>
+    {{/if}}
+  </form>
+  status: {{_gsiFormInfo "signInResult"}}
+</template>
