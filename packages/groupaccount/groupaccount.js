@@ -72,8 +72,22 @@ if (Meteor.isClient) {
             methodArguments: [{groupaccount:params}],
             userCallback: callback
         });
-
     };
+
+    //
+    // Helper shim to override template renderFunctions
+    // Inspired by template-replaces() from aldeed:template-extension package. Good stuff.
+    Template.prototype._gaOverride = function (replacement){
+        console.log ('[groupAccountManager._gaOverride] this:', this);
+        if (typeof replacement === 'string') {
+            replacement = Template[replacement];
+        }
+        console.log ('[groupAccountManager._gaOverride] replacement:', replacement);
+        if (replacement && replacement instanceof Blaze.Template ) {
+            this.renderFunction = replacement.renderFunction;
+        }
+    }
+
 }
 
 if (Meteor.isServer) {

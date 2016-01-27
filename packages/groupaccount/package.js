@@ -17,6 +17,7 @@ Package.onUse(function(api) {
         'check',
         'underscore',
         'ddp-rate-limiter',
+        'templating',
     ], ['client', 'server']);
 
     api.versionsFrom('1.2.1');
