@@ -14,7 +14,7 @@ Package.onUse(function(api) {
         'verody:groupaccount'
     ]);
     api.use ([ 'templating', ], 'client');
-    api.add_files([ 'lib/groupaccount-signin.html', 'groupaccount-signin.js', ], ['client']);
+    api.add_files([ 'groupaccount-signin.html', 'groupaccount-signin.js', ], ['client']);
     api.imply ('verody:groupaccount');
 });
 
