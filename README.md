@@ -1,5 +1,9 @@
 # groupaccount [![Build Status](https://travis-ci.org/ekobi/meteor-groupaccount.svg?branch=master)](https://travis-ci.org/ekobi/meteor-groupaccount)
-Use `groupaccount` to provide qualified access to a single Meteor account from one or more sets of credentials.
+Use the `groupaccount` packages to provide qualified access to a single Meteor account from one or more sets of credentials:
+
+1. [`groupaccount`](https://atmospherejs.com/verody/groupaccount) - Provides the core, server-side functionality, along with some client-side wrappers and helpers.
+2. [`groupaccount-signin`](https://atmospherejs.com/verody/groupaccount-signin) - Provides an unstyled, reactive signin UI template
+3. [`groupaccount-manager`](https://atmospherejs.com/verody/groupaccount-manager) - Provides an unstyled, reactive management UI template
 
 ## Some helpful definitions
 
