@@ -1,0 +1,179 @@
+<head>
+  <title>testgroupaccount</title>
+</head>
+
+<body>
+  {{> NavMenu}}
+
+  <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Group Account Sign In</h4>
+        </div>
+        <div class="modal-body">
+          {{#if currentUser}}
+            Signed in to group account '{{currentUser.username}}'
+          {{else}}
+            {{> groupSignIn}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Group Account Admin</h4>
+          {{currentUser.username}}
+        </div>
+        <div class="modal-body">
+          {{#if currentUser}}
+            {{> groupAccountManager}}
+          {{else}}
+            Nothing here.
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<template name="bs3GroupAccountManager">
+  <table class="table-striped table-condensed">
+    <tbody>
+      <tr>
+        <td>
+          <button class="btn btn-default btn-xs" data-action='_gamIncreasePendingLimit'>
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+          </button>
+          <button class="btn btn-default btn-xs" data-action='_gamDecreasePendingLimit'>
+            <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
+          </button>
+          Pending <span class="badge">{{_gamPendingCount}}/{{_gamPendingLimit}}</span>
+        </td>
+      </tr>
+      {{#each _gamPendingMembers}}
+        <tr>
+          <td>
+            <button class="btn btn-default btn-xs" data-action='_gamApprove'>
+              <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-default btn-xs" data-action='_gamDeny'>
+              <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+            </button>
+            {{memberId}}
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+
+<template name="NavMenu">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <ul class="nav navbar-nav navbar-right">
+        {{> LoginMenu}}
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<template name="LoginMenu">
+  {{#if currentUser}}
+  <li class="dropdown">
+    <a
+      href
+      class="dropdown-toggle"
+      data-toggle="dropdown">
+      <span class="glyphicon glyphicon-expand"></span>
+      {{currentUser.username}}
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <a href="" data-action="logout">Sign Out</a>
+      </li>
+      <li>
+        <a href="" data-toggle="modal" data-target="#adminModal">
+          Admin
+        </a>
+      </li>
+    </ul>
+  </li>
+  {{else}}
+    {{#if loggingIn }}
+    <li class="active">
+      <a href>
+        Logging In...
+      </a>
+    </li>
+    {{else}}
+    <li class="dropdown">
+      <a href class="dropdown-toggle" data-toggle="dropdown">
+        <span class="glyphicon glyphicon-expand"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <a href="" data-toggle="modal" data-target="#signinModal">
+            Sign In with groupaccount
+          </a>
+        </li>
+      </ul>
+    </li>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="bs3GroupSignIn">
+  <em>{{_gsiFormInfo "infoText"}}</em>
+  <form class="gsi-form form-inline">
+    <div class="form-group">
+      <input type="text" class="gsi-groupnameinput form-control" placeholder="Group Name" id="groupnameinput">
+    </div>
+
+    {{#if _gsiFormInfo "memberInputActive"}}
+      <div class="form-group">
+        <input type="text" class="gsi-membernameinput form-control" placeholder="Member Name" id="membernameinput">
+      </div>
+    {{/if}}
+
+      {{#if _gsiFormInfo "emailInputActive"}}
+        <div class="form-group">
+          <input type="email"  class="gsi-emailinput form-control" placeholder="Email" id="emailinput">
+        </div>
+      {{/if}}
+
+      {{#if _gsiFormInfo "passwordInputActive"}}
+        <div class="form-group">
+          <input type="password" class="gsi-passwordinput form-control" placeholder="Password" id="passwordinput">
+        </div>
+      {{/if}}
+
+      {{#if _gsiFormInfo "passwordVerifyInputActive"}}
+        <div class="form-group">
+          <input type="password" class="gsi-passwordverifyinput form-control" placeholder="Verify Password">
+        </div>
+      {{/if}}
+    
+      <div class="form-group">
+        {{#if _gsiFormInfo "submitButtonActive"}}
+          <input type="button"
+                 data-action='{{_gsiFormInfo "submitAction"}}'
+                 class="gsi-submitbutton btn btn-default"
+                 value={{_gsiFormInfo "submitButtonText"}} >
+        {{/if}}
+        <input type="reset"
+               value="Cancel"
+               data-action='cancelgroupsignin'
+               data-dismiss='modal'
+         class="gsi-cancelbutton btn" >
+      </div>
+
+  </form>
+  <em>{{_gsiFormInfo "signInResult"}}</em>
+</template>
