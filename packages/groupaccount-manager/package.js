@@ -12,11 +12,12 @@ Package.onUse(function(api) {
         'ecmascript',
         'meteor',
         'mongo',
-        'verody:groupaccount',
+        'reactive-var',
+        'verody:groupaccount@0.2.0'
     ],  [ 'server', 'client'] );
     api.use ([ 'templating', ], 'client');
     api.add_files([ 'groupaccount-manager.html', 'groupaccount-manager.js' ], 'client' );
-    api.imply ('verody:groupaccount');
+    api.imply ( ['reactive-var', 'verody:groupaccount']);
 });
 
 Package.onTest(function(api) {
