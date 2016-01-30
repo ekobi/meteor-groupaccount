@@ -1,5 +1,10 @@
 <template name="groupAccountManager">
   <ul>
+    <li>
+      Pending: {{_gamPendingLimit}}/{{_gamPendingLimit}}
+      <button data-action='_gamIncreasePendingLimit'>+</button>
+      <button data-action='_gamDecreasePendingLimit'>-</button>
+    </li>
     {{#each _gamPendingMembers}}
       <li>
         {{memberId}}
@@ -8,7 +13,4 @@
       </li>
     {{/each}}
   </ul>
-  pendingLimit: {{_gamPendingLimit}}
-  <button data-action='_gamIncreasePendingLimit'>+</button>
-  <button data-action='_gamDecreasePendingLimit'>-</button>
 </template>
