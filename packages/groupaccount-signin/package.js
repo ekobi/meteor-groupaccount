@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount-signin',
-    version: '0.1.0',
+    version: '0.1.1',
     summary: 'Unstyled signin template for groupaccount.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'

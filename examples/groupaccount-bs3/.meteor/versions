@@ -70,7 +70,7 @@ ui@1.0.8
 underscore@1.0.4
 url@1.0.5
 verody:groupaccount@0.2.1
-verody:groupaccount-manager@0.1.0
-verody:groupaccount-signin@0.1.0
+verody:groupaccount-manager@0.1.1
+verody:groupaccount-signin@0.1.1
 webapp@1.2.3
 webapp-hashing@1.0.5

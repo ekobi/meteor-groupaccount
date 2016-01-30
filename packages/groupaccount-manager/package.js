@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount-manager',
-    version: '0.1.0',
+    version: '0.1.1',
     summary: 'Unstyled account management template for groupaccount.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'
