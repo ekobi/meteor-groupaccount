@@ -1,36 +1,35 @@
 <template name="groupSignIn">
-  info: {{_gsiFormInfo "infoText"}}
-  <form>
-    <div>
-      <input type="text" class="form-control gsi-groupnameinput" placeholder="groupname">
-    </div>
+  {{_gsiFormInfo "infoText"}}
+  <form class="gsi-form">
+    <input type="text" class="gsi-groupnameinput" placeholder="groupname">
+
     {{#if _gsiFormInfo "memberInputActive"}}
-      <div class="form-group">
-        <input type="text" class="form-control gsi-membernameinput" placeholder="memberName">
-      </div>
+      <input type="text" class="gsi-membernameinput" placeholder="memberName">
     {{/if}}
+
     {{#if _gsiFormInfo "emailInputActive"}}
-      <div>
-        <input type="text"  class="form-control gsi-emailinput" placeholder="email">
-      </div>
+        <input type="text"  class="gsi-emailinput" placeholder="email">
     {{/if}}
+
     {{#if _gsiFormInfo "passwordInputActive"}}
-    <div>
-      <input type="password" class="form-control gsi-passwordinput" placeholder="password">
-    </div>
+      <input type="password" class="gsi-passwordinput" placeholder="password">
     {{/if}}
+
     {{#if _gsiFormInfo "passwordVerifyInputActive"}}
-    <div>
-      <input type="password" class="form-control gsi-passwordverifyinput" placeholder="verify password">
-    </div>
+      <input type="password" class="gsi-passwordverifyinput" placeholder="verify password">
     {{/if}}
+
     {{#if _gsiFormInfo "submitButtonActive"}}
-    <div>
-      <Button type="submit" data-action='{{_gsiFormInfo "submitAction"}}' class="gsi-submitbutton btn btn-default">
-        {{_gsiFormInfo "submitButtonText"}}
-      </button>
-    </div>
+      <input type="button"
+             data-action='{{_gsiFormInfo "submitAction"}}'
+             class="gsi-submitbutton"
+             value={{_gsiFormInfo "submitButtonText"}} >
     {{/if}}
+    <input type="reset"
+           value="Cancel"
+           data-action='cancelgroupsignin'
+           data-dismiss='modal'
+           class="gsi-cancelbutton" >
   </form>
-  status: {{_gsiFormInfo "signInResult"}}
+  {{_gsiFormInfo "signInResult"}}
 </template>

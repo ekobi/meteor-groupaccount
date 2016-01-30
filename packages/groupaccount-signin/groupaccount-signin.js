@@ -27,7 +27,7 @@ if (Meteor.isClient) {
             };
             GroupAccounts.createAccount (params, function (err,res) {
                 if (err) {
-                    template.signInResult.set(err.error);
+                    template.signInResult.set(err.reason);
                 } else {
                     template.signInResult.set('Group created -- logging in');
                     var loginParams = {
@@ -37,7 +37,7 @@ if (Meteor.isClient) {
                     };
                     Meteor.loginWithGroupAccount (loginParams, function (err) {
                         if (err) {
-                            template.signInResult.set(err.error);
+                            template.signInResult.set(err.reason);
                         } else {
                             template.signInResult.set('Success!');
                         }
@@ -54,7 +54,7 @@ if (Meteor.isClient) {
             };
             GroupAccounts.joinGroup (params, function (err,res) {
                 if (err) {
-                    template.signInResult.set (err.error);
+                    template.signInResult.set (err.reason);
                 } else {
                     var loginParams = {
                         accountSelector: template.groupNameInput.get(),
@@ -63,7 +63,7 @@ if (Meteor.isClient) {
                     };
                     Meteor.loginWithGroupAccount (loginParams, function (err) {
                         if (err) {
-                            template.signInResult.set(err.error);
+                            template.signInResult.set(err.reason);
                         } else {
                             template.signInResult.set('Success!');
                         }
@@ -80,13 +80,16 @@ if (Meteor.isClient) {
             };
             Meteor.loginWithGroupAccount (params, function (err) {
                 if (err) {
-                    template.signInResult.set(err.error);
+                    template.signInResult.set(err.reason);
                 } else {
                     template.signInResult.set('Success!');
                 }
             });
         },
-        
+        'click [data-action=cancelgroupsignin]': function (event, template) {
+            event.currentTarget.form.reset();
+            event.preventDefault();
+        },
     });
 
     Template.groupSignIn.onCreated (function (){
@@ -104,15 +107,16 @@ if (Meteor.isClient) {
         this.signInResult = new ReactiveVar ('');
         var _instance=this;
         this.saneProbe = _.debounce (function(params) {
+            _instance.signInResult.set('');
             Meteor.call ('groupaccount/probe', params, function (err, result) {
                 if (err) {
-                    console.log ('[statusTracker]err:', err);
+                    //console.log ('[statusTracker]err:', err);
                     return;
                 }
                 _instance.probeStatus.set (result);
                 return;
             });
-        }, 100, false);
+        }, 400, false);
     });
 
     Template.groupSignIn.onRendered (function () {
@@ -120,7 +124,7 @@ if (Meteor.isClient) {
         this.probeTracker = this.autorun (function (tc) {
             _instance.saneProbe( {
                 accountSelector:_instance.groupNameInput.get(),
-                memberSelector:_instance.memberNameInput.get()
+                memberSelector:_instance.memberNameInput.get(),
             });
         });
         this.statusTracker = this.autorun (function (tc) {
