@@ -22,7 +22,9 @@ Package.onUse(function(api) {
 
     api.versionsFrom('1.2.1');
     api.imply ('accounts-base');
-    api.addFiles(['groupaccount.js']);
+    api.addFiles(['groupaccount-both.js']);
+    api.addFiles(['groupaccount-client.js'], 'client');
+    api.addFiles(['groupaccount-server.js'], 'server');
     api.export('GroupAccounts');
 });
 
