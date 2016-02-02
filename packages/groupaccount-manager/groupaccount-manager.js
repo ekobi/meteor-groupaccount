@@ -51,6 +51,7 @@ if (Meteor.isClient) {
         },
     });
 
+
     Template.groupAccountManager.events ({
         'click [data-action=_gamApprove]': function (event,tpl) {
             GroupAccounts.activateMember ({memberSelector:this.memberId});
@@ -64,7 +65,6 @@ if (Meteor.isClient) {
                 GroupAccounts.configure ({pendingLimit:memberInfo.pendingLimit+1});
             }
         },
-
         'click [data-action=_gamDecreasePendingLimit]': function (event,tpl) {
             var memberInfo=tpl.memberInfo.get();
             if (memberInfo && memberInfo.pendingLimit) {
