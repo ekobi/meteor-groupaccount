@@ -55,6 +55,8 @@ The callback for Meteor.loginWithGroupAccount follows the convention for the Met
 
 ```
 
+Also, take a look at the [`examples on github`](https://github.com/ekobi/meteor-groupaccount/tree/master/examples/groupaccount-bs3). And there may be [`a live demo running here.`](http://groupaccount.meteor.com)
+
 ## Pipeline
 - **member roles** to facilitate access control to portions of the `Meteor.user()` data.
 
