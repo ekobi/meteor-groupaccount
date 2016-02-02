@@ -49,6 +49,7 @@ Template.prototype._gaOverride = function (replacement){
     }
     if (replacement && replacement instanceof Blaze.Template ) {
         this.renderFunction = replacement.renderFunction;
+        return;
     }
     throw new Meteor.Error(
         "groupaccount-invalid-template",

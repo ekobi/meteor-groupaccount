@@ -185,10 +185,9 @@ Meteor.methods ({
                 "groupaccount-invalid-group-account",
                 "Group Account not found for '" + params.accountSelector +"'");
         }
-        //console.log ('[groupaccount/joinGroup] services.groupaccount:', group.services.groupaccount);
 
         var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
-            return memo + member.pendingActivation?1:0;
+            return memo + (member.pendingActivation?1:0);
         }, 0);
 
         if (pendingCount >= group.services.groupaccount.config.pendingLimit) {
@@ -352,7 +351,7 @@ Meteor.methods ({
         }
 
         var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
-            return memo + member.pendingActivation?1:0;
+            return memo + (member.pendingActivation?1:0);
         }, 0);
 
         if (pendingCount < group.services.groupaccount.config.pendingLimit) {
