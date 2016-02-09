@@ -133,7 +133,7 @@ Meteor.methods ({
         if (!this.userId) {
             throw new Meteor.Error (
                 "groupaccount-not-logged-in",
-                'Must be logged in to activate group members.');
+                'Must be logged in to configure group.');
         }
         
         var group = Meteor.users.findOne (this.userId);
@@ -250,6 +250,47 @@ Meteor.methods ({
             throw new Meteor.Error (
                 "groupaccount-update-failed",
                 "Unable to activate member '"+params.memberSelector+"'."
+            );
+        }
+        return group._id;
+    },
+    'groupaccount/deactivateMember': function (params) {
+        //console.log ('[groupaccount/deactivateMember]', params);
+        check (params, Match.ObjectIncluding({
+            memberSelector:String
+        }));
+
+        if (!this.userId) {
+            throw new Meteor.Error (
+                "group-account-not-logged-in", "Must be logged in to deactivate group members.");
+        }
+
+        var group = Meteor.users.findOne (this.userId);
+        if (!group || !group.services ||!group.services.groupaccount) {
+            throw new Meteor.Error(
+                "groupaccount-invalid-group-account", "Not logged into a group account.");
+        }
+
+        if (!group.services.groupaccount.members[params.memberSelector]) {
+            throw new Meteor.Error (
+                "groupaccount-invalid-member",
+                "Member '"+params.memberSelector+"' does not exist in this group '");
+        }
+
+        if (params.memberSelector == 'admin') {
+            throw new Meteor.Error (
+                "groupaccount-invalid-member",
+                "Cannot deactivate admin member");
+        }
+
+        var query = {};
+        query['services.groupaccount.members.'+params.memberSelector+'.pendingActivation'] = true;
+        //console.log ('[groupaccount/activateMember] query:', query);
+        var status = Meteor.users.update ( group._id, { $set: query } );
+        if (status<1) {
+            throw new Meteor.Error (
+                "groupaccount-update-failed",
+                "Unable to deactivate member '"+params.memberSelector+"'."
             );
         }
         return group._id;

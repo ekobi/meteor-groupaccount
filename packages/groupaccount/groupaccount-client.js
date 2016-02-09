@@ -142,6 +142,21 @@ GroupAccounts.activateMember = function (params, callback) {
 
 
 /**
+   @desc Dectivates a group member. Must be logged in to group account. Asynchronous.
+   On success, callback returns the Meteor.Users doument ID for this group account.
+   @param {Object} params - invocation parameters
+   @param {string} params.memberSelector
+   @param {groupAccountsCB} callback - invoked upon completion
+*/
+GroupAccounts.deactivateMember = function (params, callback) {
+    if (callback) { check (callback, Function); }
+    check (params, Match.ObjectIncluding ({
+        memberSelector: String}));
+    Meteor.call ('groupaccount/deactivateMember', params, callback);
+};
+
+
+/**
    @desc A group account probe status object.
    @typedef {Object} groupAccountStatusObject
    @property {boolean} validNewGroup
