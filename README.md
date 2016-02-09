@@ -72,20 +72,15 @@ Also, take a look at the [`examples on github`](https://github.com/ekobi/meteor-
         * [`.joinGroup(params, callback)`](#module_groupaccount..GroupAccounts.joinGroup)
         * [`.removeMember(params, callback)`](#module_groupaccount..GroupAccounts.removeMember)
         * [`.activateMember(params, callback)`](#module_groupaccount..GroupAccounts.activateMember)
+        * [`.deactivateMember(params, callback)`](#module_groupaccount..GroupAccounts.deactivateMember)
         * [`.probe(params, callback)`](#module_groupaccount..GroupAccounts.probe) ⇒ <code>groupAccountStatusObject</code>
     * [`~meteorLoginWithFooCB`](#module_groupaccount..meteorLoginWithFooCB) : <code>function</code>
     * [`~groupAccountsCB`](#module_groupaccount..groupAccountsCB) : <code>function</code>
     * [`~groupAccountStatusObject`](#module_groupaccount..groupAccountStatusObject) : <code>Object</code>
 
-
--
-
 <a name="module_groupaccount..Meteor"></a>
 ### `groupaccount~Meteor` : <code>object</code>
 **Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>  
-
--
-
 <a name="module_groupaccount..Meteor.loginWithGroupAccount"></a>
 #### `Meteor.loginWithGroupAccount(params, callback)`
 Log in to existing group account. Fails if member activation is pending. Asynchronous.
@@ -99,9 +94,6 @@ Log in to existing group account. Fails if member activation is pending. Asynchr
 | params.memberPassword | <code>string</code> |  |
 | callback | <code>meteorLoginWithFooCB</code> | invoked upon completion |
 
-
--
-
 <a name="module_groupaccount..GroupAccounts"></a>
 ### `groupaccount~GroupAccounts` : <code>object</code>
 **Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>  
@@ -112,10 +104,8 @@ Log in to existing group account. Fails if member activation is pending. Asynchr
     * [`.joinGroup(params, callback)`](#module_groupaccount..GroupAccounts.joinGroup)
     * [`.removeMember(params, callback)`](#module_groupaccount..GroupAccounts.removeMember)
     * [`.activateMember(params, callback)`](#module_groupaccount..GroupAccounts.activateMember)
+    * [`.deactivateMember(params, callback)`](#module_groupaccount..GroupAccounts.deactivateMember)
     * [`.probe(params, callback)`](#module_groupaccount..GroupAccounts.probe) ⇒ <code>groupAccountStatusObject</code>
-
-
--
 
 <a name="module_groupaccount..GroupAccounts.createAccount"></a>
 #### `GroupAccounts.createAccount(params, callback)`
@@ -132,9 +122,6 @@ Creates a new group account via asynchronous server method invocation
 | params.accountAdminPassword | <code>string</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
 
-
--
-
 <a name="module_groupaccount..GroupAccounts.configure"></a>
 #### `GroupAccounts.configure(params, callback)`
 Reports, and optionally modifies, configuration paramters for currently-logged-in group account. Asynchronous.
@@ -147,9 +134,6 @@ Reports, and optionally modifies, configuration paramters for currently-logged-i
 | params | <code>object</code> | parameters to configure |
 | [params.pendingLimit] | <code>number</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
-
-
--
 
 <a name="module_groupaccount..GroupAccounts.joinGroup"></a>
 #### `GroupAccounts.joinGroup(params, callback)`
@@ -166,9 +150,6 @@ Adds a new member to existing group. Asynchronous.
 | params.memberPassword | <code>string</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
 
-
--
-
 <a name="module_groupaccount..GroupAccounts.removeMember"></a>
 #### `GroupAccounts.removeMember(params, callback)`
 Removes an existing existing user from a group. Must be logged in to group account. Asynchronous.
@@ -181,9 +162,6 @@ Removes an existing existing user from a group. Must be logged in to group accou
 | params | <code>object</code> | parameters |
 | params.memberSelector | <code>string</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
-
-
--
 
 <a name="module_groupaccount..GroupAccounts.activateMember"></a>
 #### `GroupAccounts.activateMember(params, callback)`
@@ -198,8 +176,18 @@ Activates a new group member. Must be logged in to group account. Asynchronous.
 | params.memberSelector | <code>string</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
 
+<a name="module_groupaccount..GroupAccounts.deactivateMember"></a>
+#### `GroupAccounts.deactivateMember(params, callback)`
+Dectivates a group member. Must be logged in to group account. Asynchronous.
+   On success, callback returns the Meteor.Users doument ID for this group account.
 
--
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| params | <code>Object</code> | invocation parameters |
+| params.memberSelector | <code>string</code> |  |
+| callback | <code>groupAccountsCB</code> | invoked upon completion |
 
 <a name="module_groupaccount..GroupAccounts.probe"></a>
 #### `GroupAccounts.probe(params, callback)` ⇒ <code>groupAccountStatusObject</code>
@@ -216,9 +204,6 @@ Throttled probe of group account and, optionally, a group member. Asynchronous.
 | [params.memberSelector] | <code>string</code> |  |
 | callback | <code>groupAccountsCB</code> | invoked upon completion |
 
-
--
-
 <a name="module_groupaccount..meteorLoginWithFooCB"></a>
 ### `groupaccount~meteorLoginWithFooCB` : <code>function</code>
 Callback functions for the MeteorLoginWith* methods.
@@ -230,9 +215,6 @@ Callback functions for the MeteorLoginWith* methods.
 | --- | --- | --- |
 | err | <code>Meteor.Error</code> | undefined on successful invocation |
 
-
--
-
 <a name="module_groupaccount..groupAccountsCB"></a>
 ### `groupaccount~groupAccountsCB` : <code>function</code>
 Callback functions for the GroupAccounts.* methods all have the same signature and return semantics.
@@ -243,9 +225,6 @@ Callback functions for the GroupAccounts.* methods all have the same signature a
 | --- | --- | --- |
 | err | <code>Meteor.Error</code> | undefined on successful invocation |
 | result | <code>Object</code> | varies |
-
-
--
 
 <a name="module_groupaccount..groupAccountStatusObject"></a>
 ### `groupaccount~groupAccountStatusObject` : <code>Object</code>
@@ -261,9 +240,6 @@ A group account probe status object.
 | validNewMember | <code>boolean</code> | 
 | validOldMember | <code>boolean</code> | 
 | membershipOpen | <code>boolean</code> | 
-
-
--
 
 * * *
 &copy; 2015-2016 Verody, LLC.

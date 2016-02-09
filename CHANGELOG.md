@@ -3,6 +3,7 @@ All notable changes to the verody:groupaccount meteor package will be documented
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Added server methods to deactivate members.
 
 ## [0.2.4] - 2016-02-02
 ### Changed
