@@ -12,7 +12,7 @@ meteor add verody:groupaccount
 which will pull in the core groupaccount package as well. Then, reference the template in your HTML someplace:
 
 ```
-{{>groupAccountSignin}}
+{{>groupSignIn}}
 ```
 
 Note that you *must* do this, else the eyes of the template gods shall blaze upon thee with fearsome anger. Verily, unless you ...
@@ -22,10 +22,10 @@ Note that you *must* do this, else the eyes of the template gods shall blaze upo
 In your js source:
 
 ```
-    Template.groupAccountSignin._gaOverride ("myGroupAccountSignin");
+    Template.groupSignIn._gaOverride ("myGroupSignIn");
 ```
 
-As you implement `myGroupAccountSignin` in your HTML, you can use reactive data from the template helper `_gsiFormInfo` to control form elements. Invoking with no parameters gets you all the available data. Or you can pluck specific elements like this:
+As you implement `myGroupSignIn` in your HTML, you can use reactive data from the template helper `_gsiFormInfo` to control form elements. Invoking with no parameters gets you all the available data. Or you can pluck specific elements like this:
 
 ```
     {{#if _gsiFormInfo "memberInputActive"}}
