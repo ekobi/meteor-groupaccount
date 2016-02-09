@@ -45,6 +45,19 @@
 <template name="bs3GroupAccountManager">
   <table class="table-striped table-condensed">
     <tbody>
+      {{#each _gamActiveMembers}}
+        <tr>
+          <td>
+            <button class="btn btn-default btn-xs" data-action='_gamDeactivate'>
+              <span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-default btn-xs" data-action='_gamRemove'>
+              <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
+            </button>
+            {{memberId}}
+          </td>
+        </tr>
+      {{/each}}
       <tr>
         <td>
           <button class="btn btn-default btn-xs" data-action='_gamIncreasePendingLimit'>
@@ -62,7 +75,7 @@
             <button class="btn btn-default btn-xs" data-action='_gamApprove'>
               <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
             </button>
-            <button class="btn btn-default btn-xs" data-action='_gamDeny'>
+            <button class="btn btn-default btn-xs" data-action='_gamRemove'>
               <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span>
             </button>
             {{memberId}}
