@@ -49,6 +49,30 @@ if (Meteor.isClient) {
                 return memberInfo.pendingLimit;
             }
         },
+        '_gamActiveMembers': function () {
+            var memberInfo = Template.instance().memberInfo.get();
+            if (memberInfo && memberInfo.members) {
+                return _.reduce (memberInfo.members, function (memo, v, k) {
+                    if (!v.pendingActivation) {
+                        memo.push({memberId: k});
+                    }
+                    return memo;
+                },[ ]);
+            }
+            return [ ];
+        },
+        '_gamActiveCount': function () {
+            var memberInfo = Template.instance().memberInfo.get();
+            if (memberInfo && memberInfo.members) {
+                return _.reduce (memberInfo.members, function (memo, v, k) {
+                    if (!v.pendingActivation) {
+                        memo.push({memberId: k});
+                    }
+                    return memo;
+                },[ ]).length;
+            }
+            return [ ];
+        },
     });
 
 
@@ -56,7 +80,10 @@ if (Meteor.isClient) {
         'click [data-action=_gamApprove]': function (event,tpl) {
             GroupAccounts.activateMember ({memberSelector:this.memberId});
         },
-        'click [data-action=_gamDeny]': function (event,tpl) {
+        'click [data-action=_gamDeactivate]': function (event,tpl) {
+            GroupAccounts.deactivateMember ({memberSelector:this.memberId});
+        },
+        'click [data-action=_gamRemove]': function (event,tpl) {
             GroupAccounts.removeMember ({memberSelector:this.memberId});
         },
         'click [data-action=_gamIncreasePendingLimit]': function (event,tpl) {

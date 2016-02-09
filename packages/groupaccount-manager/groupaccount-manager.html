@@ -1,7 +1,14 @@
 <template name="groupAccountManager">
   <ul>
+    {{#each _gamActiveMembers}}
+      <li>
+        {{memberId}}
+        <button data-action='_gamDeactivate'>Deactivate</button>
+        <button data-action='_gamRemove'>Remove</button>
+      </li>
+    {{/each}}
     <li>
-      Pending: {{_gamPendingLimit}}/{{_gamPendingLimit}}
+      Pending: {{_gamPendingCount}}/{{_gamPendingLimit}}
       <button data-action='_gamIncreasePendingLimit'>+</button>
       <button data-action='_gamDecreasePendingLimit'>-</button>
     </li>
@@ -9,7 +16,7 @@
       <li>
         {{memberId}}
         <button data-action='_gamApprove'>approve</button>
-        <button data-action='_gamDeny'>deny</button>
+        <button data-action='_gamRemove'>deny</button>
       </li>
     {{/each}}
   </ul>

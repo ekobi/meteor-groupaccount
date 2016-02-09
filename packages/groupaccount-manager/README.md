@@ -30,11 +30,14 @@ As you implement `myGroupAccountManager` in your HTML, these template helpers wi
 - `_gamPendingMembers`
 - `_gamPendingCount`
 - `_gamPendingLimit`
+- `_gamActiveMembers`
+- `_gamActiveCount`
 
 and also to these event handlers:
 
 - `click [data-action=_gamApprove]`
-- `click [data-action=_gamDeny]`
+- `click [data-action=_gamRemove]`
+- `click [data-action=_gamDeactivate]`
 - `click [data-action=_gamIncreasePendingLimit]`
 - `click [data-action=_gamDecreasePendingLimit]`
 
