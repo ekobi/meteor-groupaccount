@@ -280,7 +280,7 @@ Meteor.methods ({
         if (params.memberSelector == 'admin') {
             throw new Meteor.Error (
                 "groupaccount-invalid-member",
-                "Cannot deactivate admin member");
+                "Cannot deactivate group administrator");
         }
 
         var query = {};
@@ -316,6 +316,12 @@ Meteor.methods ({
             throw new Meteor.Error (
                 "groupaccount-invalid-member",
                 "Member '"+params.memberSelector+"' does not exist in this group '");
+        }
+
+        if (params.memberSelector == 'admin') {
+            throw new Meteor.Error (
+                "groupaccount-invalid-member",
+                "Cannot remove group administrator");
         }
 
         var query = {};
