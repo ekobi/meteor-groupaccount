@@ -5,3 +5,6 @@ before_install:
   - "curl -L https://raw.githubusercontent.com/arunoda/travis-ci-meteor-packages/master/configure.sh | /bin/sh"
 before_script:
   - "export PATH=$HOME/.meteor:$PATH"
+env:
+  global:
+    - PACKAGE_DIR="./packages/groupaccount/"
