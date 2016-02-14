@@ -10,7 +10,6 @@ Use the `groupaccount` packages to provide qualified access to a single Meteor a
 
 - **`accountSelector`** : a globally-unique identifier for the account. Associated with a single `Meteor.user`
 - **`memberSelector`** : locally-unique identifier for someone allowed to read/write some or all data associated with the group
-- **`accountAdmin`** : special, non-optional account member allowed to read/write all data associated with the group
 
 ## Usage
 

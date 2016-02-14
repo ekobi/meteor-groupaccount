@@ -1,10 +1,10 @@
 <template name="groupSignIn">
   {{_gsiFormInfo "infoText"}}
   <form class="gsi-form">
-    <input type="text" class="gsi-groupnameinput" placeholder="groupname">
+    <input type="text" class="gsi-groupnameinput" placeholder="group name">
 
     {{#if _gsiFormInfo "memberInputActive"}}
-      <input type="text" class="gsi-membernameinput" placeholder="memberName">
+      <input type="text" class="gsi-membernameinput" placeholder="member (optional)">
     {{/if}}
 
     {{#if _gsiFormInfo "emailInputActive"}}

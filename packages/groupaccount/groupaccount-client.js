@@ -66,15 +66,17 @@ Template.prototype._gaOverride = function (replacement){
 */
 GroupAccounts.createAccount = function (params, callback) {
     if (callback) { check (callback, Function); }
+
     check (params, Match.ObjectIncluding ({
         accountAdminPassword: String,
         accountAdminEmail: GroupAccounts.validEmail,
         accountSelector: String,
     }));
-    params.accountAdminPassword = {
-        digest: SHA256 (params.accountAdminPassword),
-        algorithm: 'sha-256' };
-    Meteor.call ('groupaccount/createAccount', params, callback);
+    Accounts.createUser ({
+        username:params.accountSelector,
+        email:params.accountAdminEmail,
+        password:params.accountAdminPassword
+    }, callback);
 };
 
 /**

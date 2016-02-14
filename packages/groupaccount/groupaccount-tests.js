@@ -111,7 +111,7 @@ if (Meteor.isClient) {
     Tinytest.addAsync ('groupaccount - test bad password login attempt', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: 'admin',
+            memberSelector: '',
             memberPassword: 'thisIsASeriousPassword,right?'
         };
 
@@ -124,7 +124,7 @@ if (Meteor.isClient) {
     Tinytest.addAsync ('groupaccount - test passwordLogin admin', function (test, onComplete) {
         var params = {
             accountSelector: GroupAccounts.Tester.uniqueAccount(),
-            memberSelector: 'admin',
+            memberSelector: '',
             memberPassword: 'thisIsASeriousPassword'
         };
 

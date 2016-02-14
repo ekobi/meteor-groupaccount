@@ -14,7 +14,7 @@ Accounts.registerLoginHandler ("groupaccount", function (params){
         memberPassword: GroupAccounts.validDigestPassword 
     }));
 
-    //console.log ('[GroupAccounts.loginHandler] accountSelector:', params.accountSelector);
+    //console.log ('[GroupAccounts.loginHandler] params:', params);
     var group = Meteor.users.findOne ({username: params.accountSelector});
     if (!group) {
         throw new Meteor.Error(
@@ -24,6 +24,24 @@ Accounts.registerLoginHandler ("groupaccount", function (params){
 
     //console.log ('[groupaccount/loginHandler] groupaccount:', group.services.groupaccount);
 
+
+    var result = { userId: group._id };
+    if (!params.memberSelector) {
+        //
+        // base account login.
+        if (!bcryptCompare ( params.memberPassword.digest, group.services.password.bcrypt)) {
+            result.error = new Meteor.Error (
+                "groupaccount-invalid-password", "Invalid Password");
+        }
+        return result;
+    }
+
+    if (!group.services.groupaccount.config.enabled) {
+        throw new Meteor.Error (
+            "groupaccount-group-closed",
+            "Group account logins disabled");
+    }
+
     var groupMember = group.services.groupaccount.members[params.memberSelector];
     if (!groupMember) {
         throw new Meteor.Error (
@@ -31,8 +49,6 @@ Accounts.registerLoginHandler ("groupaccount", function (params){
             "No member '"+params.memberSelector+"' in group '"+params.accountSelector+"'");
     }
 
-
-    var result = { userId: group._id };
 	if (groupMember.pendingActivation) {
 	    result.error = new Meteor.Error (
             "groupaccount-pending-authorization",
@@ -88,42 +104,23 @@ Meteor.publish ('groupaccount/memberInfo', function () {
     });
 });
 
+Accounts.onCreateUser(function (options, user){
+    user.services = user.services || {};
+    user.services.groupaccount = {
+        config : { pendingLimit:1, enabled:true },
+        members : {}
+    }
+    //console.log ('[groupAccount/onCreateUser CB]', options, user);
+    return user;
+});
+
 Meteor.methods ({
-    'groupaccount/createAccount': function (params){
-        check (params, Match.ObjectIncluding({
-            accountSelector:String,
-            accountAdminEmail:GroupAccounts.validEmail,
-            accountAdminPassword:GroupAccounts.validDigestPassword 
-        }));
-
-        if (Meteor.users.find ({username: params.accountSelector}).count()) {
-            throw new Meteor.Error(
-                "groupaccount-duplicate-group",
-                "Duplicate Group Account '" + params.accountSelector +"'");
-        }
-
-        var user = Accounts.insertUserDoc( { profile: {}}, {
-            username: params.accountSelector,
-            emails: [{address: params.accountAdminEmail, verified: false}],
-            services: {
-                groupaccount : {
-                    config : { pendingLimit: 1 },
-                    members: {
-                        admin: {
-                            bcrypt: bcryptHash(params.accountAdminPassword.digest,10)
-                        }
-                    }
-                }
-            }
-        });
-        
-        //console.log ('[groupaccount/createAccount] result:', user);
-        return user;
-    },
-
     'groupaccount/configure': function (params){
         try {
-            check (params, { pendingLimit: Match.Optional(Number) });
+            check (params, {
+                pendingLimit: Match.Optional(Number),
+                enabled: Match.Optional(Boolean)
+            });
         } catch (e) {
             //console.log ('[groupaccount/configure]', e);
             throw new Meteor.Error (
@@ -184,6 +181,13 @@ Meteor.methods ({
 		    throw new Meteor.Error(
                 "groupaccount-invalid-group-account",
                 "Group Account not found for '" + params.accountSelector +"'");
+        }
+
+        if (!group.services.groupaccount.config.enabled) {
+            throw new Meteor.Error (
+                "groupaccount-group-closed",
+                "Group not considering new members."
+            );
         }
 
         var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
@@ -397,6 +401,10 @@ Meteor.methods ({
             ret.validOldGroup=true;
         }
 
+        if (!group.services.groupaccount.config.enabled) {
+            return;
+        }
+
         var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
             return memo + (member.pendingActivation?1:0);
         }, 0);
@@ -405,7 +413,7 @@ Meteor.methods ({
             ret.membershipOpen=true;
         }
 
-        if (group.services.groupaccount.members[params.memberSelector]) {
+        if (!params.memberSelector || group.services.groupaccount.members[params.memberSelector]) {
             ret.validOldMember=true;
             return ret;
         }
