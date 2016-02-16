@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount-manager',
-    version: '0.1.5',
+    version: '0.3.0',
     summary: 'Unstyled account management template for groupaccount.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'
@@ -13,7 +13,7 @@ Package.onUse(function(api) {
         'meteor',
         'mongo',
         'reactive-var',
-        'verody:groupaccount@0.2.0'
+        'verody:groupaccount@0.3.0'
     ],  [ 'server', 'client'] );
     api.use ([ 'templating', ], 'client');
     api.add_files([ 'groupaccount-manager.html', 'groupaccount-manager.js' ], 'client' );

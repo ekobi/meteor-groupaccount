@@ -2,7 +2,7 @@
 All notable changes to the verody:groupaccount meteor package will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.3.0] - 2016-02-15
 - Added server methods to deactivate members.
 - Groupaccount login for members can now be disabled
 - meteor-groupaccount package now formally depends on accounts-password

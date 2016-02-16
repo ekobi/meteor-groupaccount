@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount-signin',
-    version: '0.1.5',
+    version: '0.3.0',
     summary: 'Unstyled signin template for groupaccount.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'
@@ -12,7 +12,7 @@ Package.onUse(function(api) {
         'ecmascript',
         'meteor',
         'reactive-var',
-        'verody:groupaccount@0.2.0'
+        'verody:groupaccount@0.3.0'
     ]);
     api.use ([ 'templating', ], 'client');
     api.add_files([ 'groupaccount-signin.html', 'groupaccount-signin.js', ], ['client']);

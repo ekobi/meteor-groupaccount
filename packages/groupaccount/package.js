@@ -1,6 +1,6 @@
 Package.describe({
     name: 'verody:groupaccount',
-    version: '0.2.6',
+    version: '0.3.0',
     summary: 'Provides qualified access to a single Meteor user account from one or more sets of credentials.',
     git: 'https://github.com/ekobi/meteor-groupaccount.git',
     documentation: 'README.md'
