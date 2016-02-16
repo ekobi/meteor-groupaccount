@@ -29,19 +29,7 @@ if (Meteor.isClient) {
                 if (err) {
                     template.signInResult.set(err.reason);
                 } else {
-                    template.signInResult.set('Group created -- logging in');
-                    var loginParams = {
-                        accountSelector: template.groupNameInput.get(),
-                        memberSelector: 'admin',
-                        memberPassword: template.passwordInput.get(),
-                    };
-                    Meteor.loginWithGroupAccount (loginParams, function (err) {
-                        if (err) {
-                            template.signInResult.set(err.reason);
-                        } else {
-                            template.signInResult.set('Success!');
-                        }
-                    });
+                    template.signInResult.set('Success!');
                 }
             });
         },
