@@ -113,6 +113,7 @@ if (Meteor.isClient) {
                     //console.log ('[statusTracker]err:', err);
                     return;
                 }
+                //console.log ('[statusTracker] result:', result);
                 _instance.probeStatus.set (result);
                 return;
             });
@@ -190,6 +191,10 @@ if (Meteor.isClient) {
                         return _.defaults ({
                             memberInputActive:true,
                             infoText:'Enter member name',
+                            passwordInputActive:true,
+                            submitButtonActive:true,
+                            submitButtonText:'Login',
+                            submitAction:'logintogroup',
                         }, defaultInfo);
                     }
                 }

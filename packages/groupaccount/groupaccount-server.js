@@ -22,7 +22,6 @@ Accounts.registerLoginHandler ("groupaccount", function (params){
             "Group Account not found for '" + params.accountSelector +"'");
     }
 
-    //console.log ('[groupaccount/loginHandler] groupaccount:', group.services.groupaccount);
 
 
     var result = { userId: group._id };
@@ -402,7 +401,7 @@ Meteor.methods ({
         }
 
         if (!group.services.groupaccount.config.enabled) {
-            return;
+            return ret;
         }
 
         var pendingCount = _.reduce (group.services.groupaccount.members, function (memo, member) {
