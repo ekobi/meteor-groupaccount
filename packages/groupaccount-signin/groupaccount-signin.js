@@ -41,7 +41,7 @@ if (Meteor.isClient) {
                 memberPassword: template.passwordInput.get(),
             };
             GroupAccounts.joinGroup (params, function (err,res) {
-                if (err) {
+                if (err && (err.error!='groupaccount-duplicate-member')) {
                     template.signInResult.set (err.reason);
                 } else {
                     var loginParams = {
