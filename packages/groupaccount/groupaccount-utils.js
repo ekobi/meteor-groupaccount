@@ -1,4 +1,4 @@
-GroupAccounts = {
+const GroupAccountUtils = {
 
     validEmail: Match.Where (function (x) {
         if ( _.isString(x) ) {
@@ -21,3 +21,4 @@ GroupAccounts = {
     }),
 
 };
+export { GroupAccountUtils };

@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor';
+import { GroupAccounts } from 'meteor/verody:groupaccount';
 if (Meteor.isClient) {
 
     GroupAccounts.Tester = (function (){
@@ -14,7 +16,7 @@ if (Meteor.isClient) {
             },
 
             uniqueEmail: function () {
-                console.log ('[uniqueEmail]',unique);
+                //console.log ('[uniqueEmail]',unique);
                 return 'groupaccount-test-'+unique+'@example.com';
             },
 

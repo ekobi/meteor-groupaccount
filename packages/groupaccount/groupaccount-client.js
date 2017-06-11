@@ -1,3 +1,9 @@
+import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
+import { GroupAccountUtils } from './groupaccount-utils.js';
+
+const GroupAccounts = {};
+
 /** @module groupaccount */
 /** @namespace Meteor */
 /**
@@ -69,7 +75,7 @@ GroupAccounts.createAccount = function (params, callback) {
 
     check (params, Match.ObjectIncluding ({
         accountAdminPassword: String,
-        accountAdminEmail: GroupAccounts.validEmail,
+        accountAdminEmail: GroupAccountUtils.validEmail,
         accountSelector: String,
     }));
     Accounts.createUser ({
@@ -185,3 +191,4 @@ GroupAccounts.probe = function (params, callback) {
     Meteor.call ('groupaccount/probe', params, callback);
 };
 
+export { GroupAccounts };

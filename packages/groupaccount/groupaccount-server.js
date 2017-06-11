@@ -1,6 +1,10 @@
-var bcrypt = NpmModuleBcrypt;
-var bcryptHash = Meteor.wrapAsync(bcrypt.hash);
-var bcryptCompare = Meteor.wrapAsync(bcrypt.compare);
+import { Meteor } from 'meteor/meteor';
+import { Accounts } from 'meteor/accounts-base';
+import { GroupAccountUtils } from './groupaccount-utils.js';
+const bcrypt = NpmModuleBcrypt;
+const bcryptHash = Meteor.wrapAsync(bcrypt.hash);
+const bcryptCompare = Meteor.wrapAsync(bcrypt.compare);
+import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 
 Accounts.registerLoginHandler ("groupaccount", function (params){
     if (!params.groupaccount) {
@@ -11,7 +15,7 @@ Accounts.registerLoginHandler ("groupaccount", function (params){
     check (params, Match.ObjectIncluding ({
         accountSelector: String,
         memberSelector: String,
-        memberPassword: GroupAccounts.validDigestPassword 
+        memberPassword: GroupAccountUtils.validDigestPassword
     }));
 
     //console.log ('[GroupAccounts.loginHandler] params:', params);
@@ -172,7 +176,7 @@ Meteor.methods ({
         check (params, Match.ObjectIncluding({
 		    accountSelector:String,
             memberSelector:String,
-            memberPassword:GroupAccounts.validDigestPassword 
+            memberPassword:GroupAccountUtils.validDigestPassword
         }));
 
         var group = Meteor.users.findOne ({username: params.accountSelector});
