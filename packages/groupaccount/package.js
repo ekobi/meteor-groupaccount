@@ -28,7 +28,10 @@ Package.onUse(function(api) {
 });
 
 Package.onTest(function(api) {
-  api.use(['tinytest', 'random', 'ecmascript']);
+  Npm.depends({
+    chai: "4.0.2",
+  });
+  api.use(['practicalmeteor:mocha', 'random', 'ecmascript']);
   api.use(['accounts-base', 'verody:groupaccount', 'sha']);
-  api.addFiles('groupaccount-tests.js');
+  api.addFiles('groupaccount-client-tests.js','client');
 });
