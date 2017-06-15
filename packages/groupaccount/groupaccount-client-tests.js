@@ -40,7 +40,7 @@ GroupAccounts.Tester = (function(){
 
 mocha.before('Initializing ...', function(done){
   GroupAccounts.Tester.init();
-  Meteor.logout (done);
+  Meteor.logout (() => done());
 });
 
 mocha.describe('groupaccount - test account creation', function() {
@@ -90,10 +90,6 @@ mocha.describe('groupaccount - test adding duplicate group member', function(don
 });
 
 mocha.describe('groupaccount - test passwordLogin bad member', function() {
-  mocha.before(function(done){
-    // avoid thottling threshold.
-    setTimeout(done, 5000);
-  });
 
   var params = {
     accountSelector: GroupAccounts.Tester.uniqueAccount(),

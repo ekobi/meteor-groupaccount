@@ -34,4 +34,5 @@ Package.onTest(function(api) {
   api.use(['practicalmeteor:mocha', 'random', 'ecmascript']);
   api.use(['accounts-base', 'verody:groupaccount', 'sha']);
   api.addFiles('groupaccount-client-tests.js','client');
+  api.addFiles(['groupaccount-server-tests.js'], 'server');
 });
