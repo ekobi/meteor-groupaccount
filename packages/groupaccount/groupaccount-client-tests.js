@@ -71,17 +71,6 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
     });
   });
 
-  mocha.it('should refuse to permit new member to join with existing member name.', function(done) {
-    const params = {
-      accountSelector: GroupAccounts.Tester.uniqueAccount(),
-      memberSelector: GroupAccounts.Tester.uniqueUser('1'),
-      memberPassword: 'anotherCrazyPassword',
-    };
-    GroupAccounts.joinGroup(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-duplicate-member'));
-    });
-  });
-
   mocha.it('should deny access to non-member', function(done) {
     const params = {
       accountSelector: GroupAccounts.Tester.uniqueAccount(),
@@ -156,7 +145,18 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
     });
   });
 
-  mocha.it('should permit adding additionnal group member', function(done) {
+  mocha.it('should refuse to permit new member to join with existing member name.', function(done) {
+    const params = {
+      accountSelector: GroupAccounts.Tester.uniqueAccount(),
+      memberSelector: GroupAccounts.Tester.uniqueUser('1'),
+      memberPassword: 'anotherCrazyPassword',
+    };
+    GroupAccounts.joinGroup(params, function(err = {}) {
+      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-duplicate-member'));
+    });
+  });
+
+  mocha.it('should permit adding additional group member', function(done) {
     const params = {
       accountSelector: GroupAccounts.Tester.uniqueAccount(),
       memberSelector: GroupAccounts.Tester.uniqueUser('2'),
