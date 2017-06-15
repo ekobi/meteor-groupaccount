@@ -29,10 +29,10 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   Npm.depends({
-    chai: "4.0.2",
+    chai: '4.0.2',
   });
   api.use(['practicalmeteor:mocha', 'random', 'ecmascript']);
   api.use(['accounts-base', 'verody:groupaccount', 'sha']);
-  api.addFiles('groupaccount-client-tests.js','client');
+  api.addFiles('groupaccount-client-tests.js', 'client');
   api.addFiles(['groupaccount-server-tests.js'], 'server');
 });
