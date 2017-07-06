@@ -4,7 +4,7 @@ import { Match, check } from 'meteor/check';
 import { DDPRateLimiter } from 'meteor/ddp-rate-limiter';
 import { NpmModuleBcrypt } from 'meteor/npm-bcrypt';
 import { _ } from 'meteor/underscore';
-import GroupAccountUtils from './groupaccount-utils.js';
+import { GroupAccountUtils, GroupAccountErrors } from './groupaccount-utils.js';
 
 const bcrypt = NpmModuleBcrypt;
 const bcryptHash = Meteor.wrapAsync(bcrypt.hash);
@@ -26,7 +26,7 @@ Accounts.registerLoginHandler('groupaccount', (arg) => {
   const group = Meteor.users.findOne({ username: params.accountSelector });
   if (!group) {
     throw new Meteor.Error(
-      'groupaccount-invalid-group-account',
+      GroupAccountErrors.InvalidGroupAccount,
       `Group Account not found for '${params.accountSelector}'`);
   }
 
@@ -36,7 +36,7 @@ Accounts.registerLoginHandler('groupaccount', (arg) => {
     // base account login.
     if (!bcryptCompare(params.memberPassword.digest, group.services.password.bcrypt)) {
       result.error = new Meteor.Error(
-        'groupaccount-invalid-password', 'Invalid Password');
+        GroupAccountErrors.InvalidPassword, 'Invalid Password');
       // console.log('[GroupAccounts.loginHandler] base login Invalid Password. Params:', params);
       return result;
     }
@@ -47,20 +47,20 @@ Accounts.registerLoginHandler('groupaccount', (arg) => {
 
   if (!group.services.groupaccount.config.enabled) {
     throw new Meteor.Error(
-      'groupaccount-group-closed',
+      GroupAccountErrors.GroupClosed,
       'Group account logins disabled');
   }
 
   const groupMember = group.services.groupaccount.members[params.memberSelector];
   if (!groupMember) {
     throw new Meteor.Error(
-      'groupaccount-invalid-member',
+      GroupAccountErrors.InvalidMember,
       `No member '${params.memberSelector}' in group '${params.accountSelector}'`);
   }
 
   if (groupMember.pendingActivation) {
     result.error = new Meteor.Error(
-      'groupaccount-pending-authorization',
+      GroupAccountErrors.PendingAuthorization,
       'Group membership pending authorization.');
     // console.log('[GroupAccounts.loginHandler] Pending Activation. Params/Result:', params);
     return result;
@@ -68,7 +68,7 @@ Accounts.registerLoginHandler('groupaccount', (arg) => {
 
   if (!bcryptCompare(params.memberPassword.digest, groupMember.bcrypt)) {
     result.error = new Meteor.Error(
-      'groupaccount-invalid-password', 'Invalid GroupMember Password');
+      GroupAccountErrors.InvalidPassword, 'Invalid GroupMember Password');
     // console.log('[GroupAccounts.loginHandler] Invalid GroupMember Password. Params, result:',
     //  params, result);
     return result;
@@ -141,20 +141,20 @@ Meteor.methods({
     } catch (e) {
       // console.log('[groupaccount/configure]', e);
       throw new Meteor.Error(
-        'groupaccount-invalid-configuration-parameter',
+        GroupAccountErrors.InvalidConfigurationParameter,
         `Invalid configuration parameter: '${e.path}'.`);
     }
 
     if (!this.userId) {
       throw new Meteor.Error(
-        'groupaccount-not-logged-in',
+        GroupAccountErrors.NotLoggedIn,
         'Must be logged in to configure group.');
     }
 
     const group = Meteor.users.findOne(this.userId);
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account', 'Not logged into a group account.');
+        GroupAccountErrors.InvalidGroupAccount, 'Not logged into a group account.');
     }
 
     const ret = _.extend(group.services.groupaccount.config, params);
@@ -164,7 +164,7 @@ Meteor.methods({
     const status = Meteor.users.update(group._id, { $set: query });
     if (status < 1) {
       throw new Meteor.Error(
-        'groupaccount-update-failed', 'Unable to configure',
+        GroupAccountErrors.UpdateFailed, 'Unable to configure',
       );
     }
     return ret;
@@ -179,11 +179,11 @@ Meteor.methods({
     const group = Meteor.users.findOne({ username: params.accountSelector });
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account', `No group account '${params.accountSelector}.'`);
+        GroupAccountErrors.InvalidGroupAccount, `No group account '${params.accountSelector}.'`);
     }
 
     throw new Meteor.Error(
-      'groupaccount-not-allowed', 'Removing groups not allowed.');
+      GroupAccountErrors.NotAllowed, 'Removing groups not allowed.');
   },
 
   'groupaccount/joinGroup': function(params) {
@@ -197,13 +197,13 @@ Meteor.methods({
     const group = Meteor.users.findOne({ username: params.accountSelector });
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account',
+        GroupAccountErrors.InvalidGroupAccount,
         `Group Account not found for '${params.accountSelector}'.`);
     }
 
     if (!group.services.groupaccount.config.enabled) {
       throw new Meteor.Error(
-        'groupaccount-group-closed',
+        GroupAccountErrors.GroupClosed,
         'Group not considering new members.',
       );
     }
@@ -214,14 +214,14 @@ Meteor.methods({
 
     if (pendingCount >= group.services.groupaccount.config.pendingLimit) {
       throw new Meteor.Error(
-        'groupaccount-group-closed',
+        GroupAccountErrors.GroupClosed,
         'Group not considering new members.',
       );
     }
 
     if (group.services.groupaccount.members[params.memberSelector]) {
       throw new Meteor.Error(
-        'groupaccount-duplicate-member',
+        GroupAccountErrors.DuplicateMember,
         `Duplicate member:'${params.memberSelector}.`,
       );
     }
@@ -234,7 +234,7 @@ Meteor.methods({
     const status = Meteor.users.update(group._id, { $set: query });
     if (status < 1) {
       throw new Meteor.Error(
-        'groupaccount-update-failed',
+        GroupAccountErrors.UpdateFailed,
         `Unable to add member '${params.memberSelector}.`,
       );
     }
@@ -250,7 +250,7 @@ Meteor.methods({
     if (!this.userId) {
       // console.log(`[groupaccount/activateMember] '${params.memberSelector}' not logged in`);
       throw new Meteor.Error(
-        'group-account-not-logged-in', 'Must be logged in to activate group members.');
+        GroupACcountErrors.NotLoggedIn, 'Must be logged in to activate group members.');
     }
 
     const group = Meteor.users.findOne(this.userId);
@@ -258,13 +258,13 @@ Meteor.methods({
       // console.log(
       // `[groupaccount/activateMember] '${params.memberSelector}' not a group account`);
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account', 'Not logged into a group account.');
+        GroupAccountErrors.InvalidGroupAccount, 'Not logged into a group account.');
     }
 
     if (!group.services.groupaccount.members[params.memberSelector]) {
       // console.log(`[groupaccount/activateMember] '${params.memberSelector}' invalid member`);
       throw new Meteor.Error(
-        'groupaccount-invalid-member', `Member '${params.memberSelector}' does not exist in this group.`);
+        GroupAccountErrors.InvalidMember, `Member '${params.memberSelector}' does not exist in this group.`);
     }
 
     const query = {};
@@ -274,7 +274,7 @@ Meteor.methods({
     if (status < 1) {
       // console.log(`[groupaccount/activateMember] '${params.memberSelector}' update failed`);
       throw new Meteor.Error(
-        'groupaccount-update-failed', `Unable to activate member '${params.memberSelector}'.`,
+        GroupAccountErrors.UpdateFailed, `Unable to activate member '${params.memberSelector}'.`,
       );
     }
     return group._id;
@@ -288,24 +288,24 @@ Meteor.methods({
 
     if (!this.userId) {
       throw new Meteor.Error(
-        'group-account-not-logged-in', 'Must be logged in to deactivate group members.');
+        GroupAccountErrors.NotLoggedIn, 'Must be logged in to deactivate group members.');
     }
 
     const group = Meteor.users.findOne(this.userId);
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account', 'Not logged into a group account.');
+        GroupAccountErrors.InvalidGroupAccount, 'Not logged into a group account.');
     }
 
     if (!group.services.groupaccount.members[params.memberSelector]) {
       throw new Meteor.Error(
-        'groupaccount-invalid-member',
+        GroupAccountErrors.InvalidMember,
         `Member '${params.memberSelector}' does not exist in this group.`);
     }
 
     if (params.memberSelector === 'admin') {
       throw new Meteor.Error(
-        'groupaccount-invalid-member',
+        GroupAccountErrors.InvalidMember,
         'Cannot deactivate group administrator');
     }
 
@@ -315,7 +315,7 @@ Meteor.methods({
     const status = Meteor.users.update(group._id, { $set: query });
     if (status < 1) {
       throw new Meteor.Error(
-        'groupaccount-update-failed',
+        GroupAccountErrors.UpdateFailed,
         `Unable to deactivate member '${params.memberSelector}.`,
       );
     }
@@ -330,24 +330,24 @@ Meteor.methods({
 
     if (!this.userId) {
       throw new Meteor.Error(
-        'group-account-not-logged-in', 'Must be logged in to remove group members.');
+        GroupAccountErrors.NotLoggedIn, 'Must be logged in to remove group members.');
     }
 
     const group = Meteor.users.findOne(this.userId);
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account', 'Not logged into a group account.');
+        GroupAccountErrors.InvalidGroupAccount, 'Not logged into a group account.');
     }
 
     if (!group.services.groupaccount.members[params.memberSelector]) {
       throw new Meteor.Error(
-        'groupaccount-invalid-member',
+        GroupAccountErrors.InvalidMember,
         `Member '${params.memberSelector}' does not exist in this group.`);
     }
 
     if (params.memberSelector === 'admin') {
       throw new Meteor.Error(
-        'groupaccount-invalid-member',
+        GroupAccountErrors.InvalidMember,
         'Cannot remove group administrator');
     }
 
@@ -357,7 +357,7 @@ Meteor.methods({
     // console.log('[groupaccount/removeMember] status:', status);
     if (status < 1) {
       throw new Meteor.Error(
-        'groupaccount-update-failed',
+        GroupAccountErrors.UpdateFailed,
         `Unable to remove member '${params.memberSelector}'.`,
       );
     }
@@ -367,13 +367,13 @@ Meteor.methods({
   'groupaccount/members': function() {
     if (!this.userId) {
       throw new Meteor.Error(
-        'not-logged-in', 'Must be logged in to list group members.');
+        GroupAccountErrors.NotLoggedIn, 'Must be logged in to list group members.');
     }
 
     const group = Meteor.users.findOne(this.userId);
     if (!group || !group.services || !group.services.groupaccount) {
       throw new Meteor.Error(
-        'groupaccount-invalid-group-account',
+        GroupAccountErrors.InvalidGroupAccount,
         'Not logged into a group account.');
     }
 
@@ -393,10 +393,11 @@ Meteor.methods({
       });
     } catch (e) {
       throw new Meteor.Error(
-        'groupaccount-invalid-probe-params', e.message);
+        GroupAccountErrors.InvalidProbeParams, e.message);
     }
 
     const ret = {
+      ...params,
       validNewGroup: false,
       validOldGroup: false,
       validNewMember: false,

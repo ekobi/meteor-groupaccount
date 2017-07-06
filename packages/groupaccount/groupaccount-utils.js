@@ -24,4 +24,17 @@ const GroupAccountUtils = {
   }),
 
 };
-export default GroupAccountUtils;
+const GroupAccountErrors = {
+  DuplicateMember: 'groupaccount-duplicate-member',
+  GroupClosed: 'groupaccount-group-closed',
+  InvalidConfiguration_Parameter: 'groupaccount-invalid-configuration-parameter',
+  InvalidGroupAccount: 'groupaccount-invalid-group-account',
+  InvalidMember: 'groupaccount-invalid-member',
+  InvalidPassword: 'groupaccount-invalid-password',
+  InvalidProbeParams: 'groupaccount-invalid-probe-params',
+  NotAllowed: 'groupaccount-not-allowed',
+  NotLoggedIn: 'groupaccount-not-logged-in',
+  PendingAuthorization: 'groupaccount-pending-authorization',
+  UpdateFailed: 'groupaccount-update-failed',
+};
+export { GroupAccountUtils, GroupAccountErrors }
