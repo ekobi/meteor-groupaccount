@@ -20,7 +20,7 @@ Package.onUse(function(api) {
     'ddp-rate-limiter',
     'templating',
   ], ['client', 'server']);
-
+  api.export(['GroupAccountErrors', 'GroupAccounts'], 'client');
   api.versionsFrom('1.5');
   api.imply(['accounts-base', 'accounts-password'], ['client', 'server']);
   api.mainModule('groupaccount-client.js', 'client');
@@ -30,9 +30,10 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   Npm.depends({
     chai: '4.0.2',
+    'babel-runtime': '6.23.0'
   });
   api.use(['practicalmeteor:mocha', 'random', 'ecmascript']);
   api.use(['accounts-base', 'verody:groupaccount', 'sha']);
-  api.addFiles('groupaccount-client-tests.js', 'client');
+  api.addFiles(['groupaccount-client-tests.js'], 'client');
   api.addFiles(['groupaccount-server-tests.js'], 'server');
 });

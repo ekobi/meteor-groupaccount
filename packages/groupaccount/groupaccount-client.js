@@ -2,10 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Match, check } from 'meteor/check';
 import { SHA256 } from 'meteor/sha';
-import { Template, Blaze } from 'meteor/templating';
-import GroupAccountUtils from './groupaccount-utils.js';
+import { GroupAccountUtils } from './groupaccount-utils.js';
 
-const GroupAccounts = {};
+GroupAccounts = {};
 
 /** @module groupaccount */
 /** @namespace Meteor */
@@ -51,25 +50,6 @@ Meteor.loginWithGroupAccount = function(params, callback) {
    @param {Meteor.Error} err - undefined on successful invocation
    @param {Object} result - varies
  */
-/** @desc Helper shim to override template renderFunctions. Succeeds silently, or throws an error.
-   Inspired by template-replaces() from aldeed:template-extension package. Good stuff.
-   @param {string|Template} replacement - name of updated template as specified in HTML
-   source code, or its corresponding Blaze Template object.
- */
-Template.prototype._gaOverride = function(replacement) {
-  let r = '<non-blaze-template>';
-  if (typeof replacement === 'string') {
-    r = replacement;
-    replacement = Template[replacement];
-  }
-  if (replacement && replacement instanceof Blaze.Template) {
-    this.renderFunction = replacement.renderFunction;
-    return;
-  }
-  throw new Meteor.Error(
-    'groupaccount-invalid-template',
-    `unable to override with '${r}'`);
-};
 
 /** @desc Creates a new group account via asynchronous server method invocation
    Callback throws an error, or returns a Meteor.users document
@@ -201,5 +181,3 @@ GroupAccounts.probe = function(params, callback) {
   });
   Meteor.call('groupaccount/probe', params, callback);
 };
-
-export default GroupAccounts;

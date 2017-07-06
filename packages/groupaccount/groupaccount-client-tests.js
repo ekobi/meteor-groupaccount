@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import GroupAccounts from 'meteor/verody:groupaccount';
+import { GroupAccountErrors, GroupAccounts } from 'meteor/verody:groupaccount';
 import { Random } from 'meteor/random';
 import { assert } from 'meteor/practicalmeteor:chai';
 import mocha from 'meteor/practicalmeteor:mocha';
@@ -30,12 +30,14 @@ GroupAccounts.Tester = (function() {
   };
 }());
 
+
 mocha.before('Initializing ...', function(done) {
   GroupAccounts.Tester.init();
   Meteor.logout(() => done());
 });
 
 mocha.describe('groupaccount end-to-end tests via client API', function() {
+  console.log('[client-tests] describe/this', this);
   mocha.it('should create a new group account.', function(done) {
     const params = {
       accountAdminPassword: 'thisIsASeriousPassword',
@@ -78,7 +80,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberPassword: 'thisIsASeriousPassword',
     };
     Meteor.loginWithGroupAccount(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-member'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidMember));
     });
   });
 
@@ -89,7 +91,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberPassword: 'anotherCrazyPassword',
     };
     Meteor.loginWithGroupAccount(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-pending-authorization'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.PendingAuthorization));
     });
   });
 
@@ -100,7 +102,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberPassword: 'thisIsABadPassword',
     };
     Meteor.loginWithGroupAccount(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-password'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidPassword));
     });
   });
 
@@ -121,7 +123,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberSelector: 'badMember',
     };
     GroupAccounts.removeMember(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-member'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidMember));
     });
   });
 
@@ -130,7 +132,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberSelector: 'badMember',
     };
     GroupAccounts.activateMember(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-member'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidMember));
     });
   });
 
@@ -152,7 +154,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberPassword: 'anotherCrazyPassword',
     };
     GroupAccounts.joinGroup(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-duplicate-member'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.DuplicateMember));
     });
   });
 
@@ -175,7 +177,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       memberPassword: 'anotherCrazyPassword',
     };
     GroupAccounts.joinGroup(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-group-closed'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.GroupClosed));
     });
   });
 
@@ -184,7 +186,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       pendingLimit: 3, badConfig: false,
     };
     GroupAccounts.configure(params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-configuration-parameter'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidConfigurationParameter));
     });
   });
 
@@ -232,7 +234,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       accountSelector: GroupAccounts.Tester.uniqueAccount('badNews'),
     };
     Meteor.call('groupaccount/removeAccount', params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-invalid-group-account'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.InvalidGroupAccount));
     });
   });
 
@@ -241,7 +243,7 @@ mocha.describe('groupaccount end-to-end tests via client API', function() {
       accountSelector: GroupAccounts.Tester.uniqueAccount(),
     };
     Meteor.call('groupaccount/removeAccount', params, function(err = {}) {
-      tryWrap(done, () => assert.propertyVal(err, 'error', 'groupaccount-not-allowed'));
+      tryWrap(done, () => assert.propertyVal(err, 'error', GroupAccountErrors.NotAllowed));
     });
   });
 });
