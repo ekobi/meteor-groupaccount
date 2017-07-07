@@ -10,7 +10,7 @@ const bcrypt = NpmModuleBcrypt;
 const bcryptHash = Meteor.wrapAsync(bcrypt.hash);
 const bcryptCompare = Meteor.wrapAsync(bcrypt.compare);
 
-Accounts.registerLoginHandler('groupaccount', (arg) => {
+Accounts.registerLoginHandler('groupaccount', function(arg) {
   if (!arg.groupaccount) {
     return undefined;
   }
@@ -77,7 +77,7 @@ Accounts.registerLoginHandler('groupaccount', (arg) => {
   return result;
 });
 
-Meteor.publish('groupaccount/memberInfo', () => {
+Meteor.publish('groupaccount/memberInfo', function () {
   // console.log(`[GroupAccounts Meteor.publish] this.userId: ${this.UserId}`)
   if (!this.userId) {
     return [];
