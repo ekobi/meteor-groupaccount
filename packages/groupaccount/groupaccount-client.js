@@ -124,6 +124,7 @@ GroupAccounts.removeMember = function(params, callback) {
   check(params, Match.ObjectIncluding({
     memberSelector: String }));
   Meteor.call('groupaccount/removeMember', params, callback);
+  Meteor.logoutOtherClients();
 };
 
 /**
@@ -152,6 +153,7 @@ GroupAccounts.deactivateMember = function(params, callback) {
   check(params, Match.ObjectIncluding({
     memberSelector: String }));
   Meteor.call('groupaccount/deactivateMember', params, callback);
+  Meteor.logoutOtherClients();
 };
 
 
