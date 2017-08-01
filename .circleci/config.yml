@@ -27,13 +27,9 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run:
-        name: Install Meteor
-        command: curl https://install.meteor.com | /bin/sh
+      - run: curl https://install.meteor.com | /bin/sh
 
-      - run:
-        name: Install NPM Packages
-        command: npm install
+      - run: npm install
 
       - save_cache:
           paths:
@@ -41,4 +37,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: yarn test
+      - run: spacejam test-packages --driver-package practicalmeteor:mocha ./packages/groupaccount
