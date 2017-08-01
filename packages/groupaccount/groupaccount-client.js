@@ -51,6 +51,25 @@ Meteor.loginWithGroupAccount = function(params, callback) {
    @param {Object} result - varies
  */
 
+/** @desc Helper shim to override template renderFunctions. Succeeds silently, or throws an error.
+   Inspired by template-replaces() from aldeed:template-extension package. Good stuff.
+   @param {string|Template} replacement - name of updated template as specified in HTML source code, or its corresponding Blaze Template object.
+ */
+Template.prototype._gaOverride = function (replacement){
+  var r = '<non-blaze-template>';
+  if (typeof replacement === 'string') {
+    r = replacement;
+    replacement = Template[replacement];
+  }
+  if (replacement && replacement instanceof Blaze.Template ) {
+    this.renderFunction = replacement.renderFunction;
+    return;
+  }
+  throw new Meteor.Error(
+    "groupaccount-invalid-template",
+    "unable to override with '" + r + "'");
+}
+
 /** @desc Creates a new group account via asynchronous server method invocation
    Callback throws an error, or returns a Meteor.users document
    @param {Object} params - invocation parameters
