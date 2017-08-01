@@ -19,6 +19,12 @@ Add the package thus:
 meteor add verody:groupaccount
 ```
 
+## Package testing
+
+```
+meteor test-packages --driver-package practicalmeteor:mocha ./
+```
+
 ## Examples
 
 Callback functions for the `GroupAccounts.*` methods all have the same signature and return semantics:
@@ -79,12 +85,12 @@ Also, take a look at the [`examples on github`](https://github.com/ekobi/meteor-
 
 <a name="module_groupaccount..Meteor"></a>
 ### `groupaccount~Meteor` : <code>object</code>
-**Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>  
+**Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>
 <a name="module_groupaccount..Meteor.loginWithGroupAccount"></a>
 #### `Meteor.loginWithGroupAccount(params, callback)`
 Log in to existing group account. Fails if member activation is pending. Asynchronous.
 
-**Kind**: static method of <code>[Meteor](#module_groupaccount..Meteor)</code>  
+**Kind**: static method of <code>[Meteor](#module_groupaccount..Meteor)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -95,7 +101,7 @@ Log in to existing group account. Fails if member activation is pending. Asynchr
 
 <a name="module_groupaccount..GroupAccounts"></a>
 ### `groupaccount~GroupAccounts` : <code>object</code>
-**Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>  
+**Kind**: inner namespace of <code>[groupaccount](#module_groupaccount)</code>
 
 * [`~GroupAccounts`](#module_groupaccount..GroupAccounts) : <code>object</code>
     * [`.createAccount(params, callback)`](#module_groupaccount..GroupAccounts.createAccount)
@@ -111,7 +117,7 @@ Log in to existing group account. Fails if member activation is pending. Asynchr
 Creates a new group account via asynchronous server method invocation
     Callback throws an error, or returns a Meteor.users document
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -126,7 +132,7 @@ Creates a new group account via asynchronous server method invocation
 Reports, and optionally modifies, configuration paramters for currently-logged-in group account. Asynchronous.
    On success, callback returns the current (and possibly updated) configuration parameters.
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -139,7 +145,7 @@ Reports, and optionally modifies, configuration paramters for currently-logged-i
 Adds a new member to existing group. Asynchronous.
    On success callback returns a Meteor.users document ID for this group account
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -154,7 +160,7 @@ Adds a new member to existing group. Asynchronous.
 Removes an existing existing user from a group. Must be logged in to group account. Asynchronous.
    On success, callback returns a Meteor.users document for this group account
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -167,7 +173,7 @@ Removes an existing existing user from a group. Must be logged in to group accou
 Activates a new group member. Must be logged in to group account. Asynchronous.
    On success, callback returns the Meteor.Users doument ID for this group account.
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -180,7 +186,7 @@ Activates a new group member. Must be logged in to group account. Asynchronous.
 Dectivates a group member. Must be logged in to group account. Asynchronous.
    On success, callback returns the Meteor.Users doument ID for this group account.
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -193,8 +199,8 @@ Dectivates a group member. Must be logged in to group account. Asynchronous.
 Throttled probe of group account and, optionally, a group member. Asynchronous.
    On success, callback returns a status object for the group acccount.
 
-**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>  
-**Returns**: <code>groupAccountStatusObject</code> - Well, the callback returns one of these, if it wants.  
+**Kind**: static method of <code>[GroupAccounts](#module_groupaccount..GroupAccounts)</code>
+**Returns**: <code>groupAccountStatusObject</code> - Well, the callback returns one of these, if it wants.
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -208,7 +214,7 @@ Throttled probe of group account and, optionally, a group member. Asynchronous.
 Callback functions for the MeteorLoginWith* methods.
    Returns a Meteor.Error on early failure. Otherwise, returns an object with userId set to Meteor.users document ID for this group account, and perhaps error set to a Meteor.Error.
 
-**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>  
+**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -218,7 +224,7 @@ Callback functions for the MeteorLoginWith* methods.
 ### `groupaccount~groupAccountsCB` : <code>function</code>
 Callback functions for the GroupAccounts.* methods all have the same signature and return semantics.
 
-**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>  
+**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -229,16 +235,16 @@ Callback functions for the GroupAccounts.* methods all have the same signature a
 ### `groupaccount~groupAccountStatusObject` : <code>Object</code>
 A group account probe status object.
 
-**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>  
+**Kind**: inner typedef of <code>[groupaccount](#module_groupaccount)</code>
 **Properties**
 
 | Name | Type |
 | --- | --- |
-| validNewGroup | <code>boolean</code> | 
-| validOldGroup | <code>boolean</code> | 
-| validNewMember | <code>boolean</code> | 
-| validOldMember | <code>boolean</code> | 
-| membershipOpen | <code>boolean</code> | 
+| validNewGroup | <code>boolean</code> |
+| validOldGroup | <code>boolean</code> |
+| validNewMember | <code>boolean</code> |
+| validOldMember | <code>boolean</code> |
+| membershipOpen | <code>boolean</code> |
 
 * * *
 &copy; 2015-2016 Verody, LLC.
