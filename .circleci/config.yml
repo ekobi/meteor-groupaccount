@@ -38,4 +38,4 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: spacejam test-packages --driver-package practicalmeteor:mocha ./packages/groupaccount
+      - run: LC_ALL=en_US.UTF-8 spacejam test-packages --driver-package practicalmeteor:mocha ./packages/groupaccount
