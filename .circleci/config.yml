@@ -8,7 +8,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:7.10
-      - image: circleci/mongo
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -21,8 +20,7 @@ jobs:
       - checkout
       - run: git submodule update --init
       #- run: sudo sh -c "echo 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8' > /etc/default/locale"
-      #- run: sudo locale-gen
-      - run: sudo apt-get
+      - run: uname -a && sudo apt-get install locales
       - run: cat /etc/default/locale
       # Download and cache dependencies
       - restore_cache:
