@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ekobi/meteor-groupaccount.svg?branch=master)](https://travis-ci.org/ekobi/meteor-groupaccount)
+[![CircleCI](https://circleci.com/gh/ekobi/meteor-groupaccount/tree/master.svg?style=svg)](https://circleci.com/gh/ekobi/meteor-groupaccount/tree/master)
 # groupaccount
 Use the `groupaccount` packages to provide qualified access to a single Meteor account from one or more sets of credentials:
 
