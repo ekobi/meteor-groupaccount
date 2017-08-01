@@ -19,7 +19,6 @@ jobs:
     steps:
       - checkout
       - run: git submodule update --init
-      - run:
       - run: sudo locale -a && sudo apt-get install locales && sudo locale -a
       - run: sudo sh -c "echo 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8' > /etc/default/locale"
       - run: cat /etc/default/locale
