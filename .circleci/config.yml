@@ -19,7 +19,7 @@ jobs:
     steps:
       - checkout
       - run: git submodule update --init
-
+      - run: sudo sh -c "echo -e 'LANG=en_US.UTF-8\nLC_ALL=en_US.UTF-8' > /etc/default/locale"
       # Download and cache dependencies
       - restore_cache:
           keys:
