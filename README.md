@@ -5,6 +5,7 @@ Use the `groupaccount` packages to provide qualified access to a single Meteor a
 1. [`groupaccount`](https://atmospherejs.com/verody/groupaccount) - Provides the core, server-side functionality, along with some client-side wrappers and helpers.
 2. [`groupaccount-signin`](https://atmospherejs.com/verody/groupaccount-signin) - Provides an unstyled, reactive signin UI template
 3. [`groupaccount-manager`](https://atmospherejs.com/verody/groupaccount-manager) - Provides an unstyled, reactive management UI template
+4. [`groupaccount-cyclejs`](https://atmospherejs.com/verody/groupaccount-cyclejs) - Provides an xstream-based UI component
 
 ## Some helpful definitions
 
@@ -13,18 +14,17 @@ Use the `groupaccount` packages to provide qualified access to a single Meteor a
 
 ## Usage
 
-Add the package thus:
+Add the core package thus:
 
 ```
 meteor add verody:groupaccount
 ```
 
-## Package testing
+## Core package testing
 
 ```
-meteor test-packages --driver-package practicalmeteor:mocha ./
+meteor test-packages --driver-package practicalmeteor:mocha ./packages/groupaccount/
 ```
-
 ## Examples
 
 Callback functions for the `GroupAccounts.*` methods all have the same signature and return semantics:
@@ -60,7 +60,7 @@ The callback for Meteor.loginWithGroupAccount follows the convention for the Met
 
 ```
 
-Also, take a look at the [`examples on github`](https://github.com/ekobi/meteor-groupaccount/tree/master/examples/groupaccount-bs3). And there may be [`a live demo running here.`](http://groupaccount.meteor.com)
+Also, take a look at the examples on github [`here (Blaze+Bootstrap3)`](https://github.com/ekobi/meteor-groupaccount/tree/master/examples/groupaccount-bs3), and [`here (Cycle.js+Bootstrap3)`](https://github.com/ekobi/meteor-groupaccount/tree/master/examples/gsi-cyclejs-bs3)
 
 ## Pipeline
 - **member roles** to facilitate access control to portions of the `Meteor.user()` data.
