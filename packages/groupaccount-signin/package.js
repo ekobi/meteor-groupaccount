@@ -12,9 +12,9 @@ Package.onUse(function(api) {
         'ecmascript',
         'meteor',
         'reactive-var',
-        'verody:groupaccount@0.3.0'
+        'verody:groupaccount@0.4.0'
     ]);
-    api.use ([ 'templating', ], 'client');
+    api.use ([ 'templating@1.3.2', ], 'client');
     api.add_files([ 'groupaccount-signin.html', 'groupaccount-signin.js', ], ['client']);
     api.imply ( ['reactive-var', 'verody:groupaccount']);
 });

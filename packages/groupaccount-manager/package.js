@@ -13,9 +13,9 @@ Package.onUse(function(api) {
         'meteor',
         'mongo',
         'reactive-var',
-        'verody:groupaccount@0.3.0'
+        'verody:groupaccount@0.4.0'
     ],  [ 'server', 'client'] );
-    api.use ([ 'templating', ], 'client');
+    api.use ([ 'templating@1.3.2', ], 'client');
     api.add_files([ 'groupaccount-manager.html', 'groupaccount-manager.js' ], 'client' );
     api.imply ( ['reactive-var', 'verody:groupaccount']);
 });

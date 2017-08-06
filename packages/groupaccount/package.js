@@ -18,7 +18,7 @@ Package.onUse(function(api) {
     'check',
     'underscore',
     'ddp-rate-limiter',
-    'templating',
+    'templating@1.3.2',
   ], ['client', 'server']);
   api.export(['GroupAccountErrors', 'GroupAccounts'], 'client');
   api.versionsFrom('1.5');

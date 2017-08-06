@@ -1,6 +1,6 @@
 Package.describe({
   name: 'verody:groupaccount-cyclejs',
-  version: '0.0.1',
+  version: '0.4.0',
   summary: 'Cycle.js component implementing groupaccount signin and management widget.',
   git: 'https://github.com/ekobi/meteor-groupaccount.git',
   documentation: 'README.md'
@@ -12,7 +12,7 @@ Package.onUse(function(api) {
     'ecmascript',
     'es5-shim',
     'tracker',
-    'verody:groupaccount',
+    'verody:groupaccount@0.4.0',
   ], 'client');
   api.add_files([
     'adminStatus.js',
@@ -35,6 +35,5 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use('ecmascript');
   api.use('tinytest');
-  api.use('groupaccount-cyclejs');
-  api.mainModule('groupaccount-cyclejs-tests.js');
+  api.mainModule('groupaccount-cyclejs-test.js');
 });
