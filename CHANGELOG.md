@@ -2,9 +2,10 @@
 All notable changes to the verody:groupaccount meteor package will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.4.0]
 ### Changed
 - Migrate to Meteor version 1.5.
+- add CycleJS UI component
 
 ## [0.3.0] - 2016-02-15
 - Added server methods to deactivate members.
